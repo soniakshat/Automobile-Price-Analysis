@@ -9,7 +9,7 @@ import java.util.Set;
 /**
  *
  * Class for inverted indexing
- *  @author Akshat Soni
+ *  @author Harsh Verma
  * */
 public class InvertedIndexing {
     private Map<String, Set<String>> invertedIndexing;

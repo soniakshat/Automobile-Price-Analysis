@@ -8,7 +8,7 @@ import java.util.List;
 /**
  *
  * Class for page ranking
- *  @author Akshat Soni
+ *  @author Harsh Verma
  * */
 public class PageRanking {
     public static List<CarPage> rankPages(List<CarPage> pages) {

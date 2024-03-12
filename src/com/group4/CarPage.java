@@ -1,10 +1,11 @@
-/**
-* This class provides a simple interface of a page containing information about a car
-*/
+
 package com.group4;
 
 import java.util.List;
-
+/**
+ * This class provides a simple interface of a page containing information about a car
+ * @author Harsh Verma
+ */
 public class CarPage {
     private String url;
     private int frequencyCount;
@@ -16,6 +17,7 @@ public class CarPage {
      * @param url the URL of the page
      * @param frequencyCount the frequency count of the page
      * @param searchKeywords the search keywords related to the page
+     * @author Harsh Verma
      */
 
     public CarPage(String url, int frequencyCount, List<String> searchKeywords) {
@@ -28,6 +30,7 @@ public class CarPage {
      * Calculates the rank of the page based on its frequency count and search keywords
      * 
      * @return the rank of the page
+     * @author Harsh Verma
      */
 
     public double calculateRank() {

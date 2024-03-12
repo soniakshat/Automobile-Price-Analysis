@@ -1,27 +1,75 @@
 package com.group4;
 
 /**
- *
- * Class to print objects
- *  @author Akshat Soni
- * */
+ * Class to print the statements and errors
+ * @author Akshat Soni
+ */
 public class CustomPrint {
+    /**
+     * get - shouldPrintComments
+     */
+    static final boolean shouldPrintComments = true;
 
     /**
-     * prints the object in same line
-     * @param obj Object that you want to print.
+     * @param obj Object to print on same line
      * @author Akshat Soni
-     **/
-    public static void print(Object obj) {
-        System.out.print(obj);
+     */
+    static void print(Object obj) {
+        if (!shouldPrintComments)
+            return;
+        System.out.println(obj);
     }
 
     /**
-     * prints the object in new line
-     * @param obj Object that you want to print.
+     * @param TAG Tag to the print
+     * @param obj Object to print on same line
      * @author Akshat Soni
-     **/
-    public static void println(Object obj) {
+     */
+    static void print(String TAG, Object obj) {
+        if (!shouldPrintComments)
+            return;
+        System.out.println("[" + TAG + "] :: " + obj);
+    }
+
+    /**
+     * @param obj Object to print on new line
+     * @author Akshat Soni
+     */
+    static void println(Object obj) {
+        if (!shouldPrintComments)
+            return;
         System.out.println(obj);
+    }
+
+    /**
+     * @param TAG Tag to the print
+     * @param obj Object to print on new line
+     * @author Akshat Soni
+     */
+    static void println(String TAG, Object obj) {
+        if (!shouldPrintComments)
+            return;
+        System.out.println("[" + TAG + "] :: " + obj);
+    }
+
+    /**
+     * @param obj Object to print error on new line
+     * @author Akshat Soni
+     */
+    static void printError(Object obj) {
+        if (!shouldPrintComments)
+            return;
+        System.err.println(obj);
+    }
+
+    /**
+     * @param TAG Tag to the print
+     * @param obj Object to print error on new line
+     * @author Akshat Soni
+     */
+    static void printError(String TAG, Object obj) {
+        if (!shouldPrintComments)
+            return;
+        System.err.println("[" + TAG + "] :: " + obj);
     }
 }

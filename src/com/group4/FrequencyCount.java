@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.PriorityQueue;
 
 /**
- *
  * Class to count frequency of words in provided text
  *  @author Akshat Soni
  * */
