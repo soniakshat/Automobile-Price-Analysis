@@ -3,7 +3,6 @@ package com.group4;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -65,66 +64,66 @@ public class DataValidation {
             Document doc = Jsoup.connect("http://your-website-url.com").get();
             Element distanceElement = doc.getElementById("distance-id"); // Replace "distance-id" with the actual ID of the distance input element
             String distanceValue = distanceElement.val(); // Assuming the input value is stored in a "value" attribute
-            
+
             Element modelYearElement = doc.getElementById("year-id"); // Replace "year-id" with the actual ID of the year input element
             String modelYearValue = modelYearElement.val();
-            
+
             Element companyElement = doc.getElementById("company-id"); // Replace "company-id" with the actual ID of the company input element
             String companyValue = companyElement.val();
-            
+
             Element priceElement = doc.getElementById("price-id"); // Replace "price-id" with the actual ID of the price input element
             String priceValue = priceElement.val();
-            
+
             Element emailElement = doc.getElementById("email-id"); // Replace "email-id" with the actual ID of the email input element
             String emailValue = emailElement.val();
-            
+
             Element usernameElement = doc.getElementById("username-id"); // Replace "username-id" with the actual ID of the username input element
             String usernameValue = usernameElement.val();
-            
+
             Element passwordElement = doc.getElementById("password-id"); // Replace "password-id" with the actual ID of the password input element
             String passwordValue = passwordElement.val();
 
             // Validate inputs
             if (validateDistanceTravelled(distanceValue)) {
-                System.out.println("Distance travelled input is valid: " + distanceValue);
+                CustomPrint.println("Distance travelled input is valid: " + distanceValue);
             } else {
-                System.out.println("Invalid distance travelled input: " + distanceValue);
+                CustomPrint.println("Invalid distance travelled input: " + distanceValue);
             }
 
             if (validateModelYear(modelYearValue)) {
-                System.out.println("Model year input is valid: " + modelYearValue);
+                CustomPrint.println("Model year input is valid: " + modelYearValue);
             } else {
-                System.out.println("Invalid model year input: " + modelYearValue);
+                CustomPrint.println("Invalid model year input: " + modelYearValue);
             }
 
             if (validateCompany(companyValue)) {
-                System.out.println("Company input is valid: " + companyValue);
+                CustomPrint.println("Company input is valid: " + companyValue);
             } else {
-                System.out.println("Invalid company input: " + companyValue);
+                CustomPrint.println("Invalid company input: " + companyValue);
             }
 
             if (validatePrice(priceValue)) {
-                System.out.println("Price input is valid: " + priceValue);
+                CustomPrint.println("Price input is valid: " + priceValue);
             } else {
-                System.out.println("Invalid price input: " + priceValue);
+                CustomPrint.println("Invalid price input: " + priceValue);
             }
 
             if (validateEmail(emailValue)) {
-                System.out.println("Email input is valid: " + emailValue);
+                CustomPrint.println("Email input is valid: " + emailValue);
             } else {
-                System.out.println("Invalid email input: " + emailValue);
+                CustomPrint.println("Invalid email input: " + emailValue);
             }
 
             if (validateUsername(usernameValue)) {
-                System.out.println("Username input is valid: " + usernameValue);
+                CustomPrint.println("Username input is valid: " + usernameValue);
             } else {
-                System.out.println("Invalid username input: " + usernameValue);
+                CustomPrint.println("Invalid username input: " + usernameValue);
             }
 
             if (validatePassword(passwordValue)) {
-                System.out.println("Password input is valid: " + passwordValue);
+                CustomPrint.println("Password input is valid: " + passwordValue);
             } else {
-                System.out.println("Invalid password input: " + passwordValue);
+                CustomPrint.println("Invalid password input: " + passwordValue);
             }
 
         } catch (IOException e) {
