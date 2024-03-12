@@ -1,0 +1,134 @@
+package com.group4;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class DataValidation {
+
+    // Regular expressions for validating input
+    private static final String DISTANCE_TRAVELLED_REGEX = "\\d+"; // Matches positive integers
+    private static final String MODEL_YEAR_REGEX = "\\d{4}"; // Matches four-digit numbers
+    private static final String COMPANY_REGEX = "[a-zA-Z\\s]+"; // Matches alphabets and spaces
+    private static final String PRICE_REGEX = "\\d+(\\.\\d+)?"; // Matches positive decimal numbers
+    private static final String EMAIL_REGEX = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$"; // Matches email format
+    private static final String USERNAME_REGEX = "^[a-zA-Z0-9_]+$";
+    private static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$";
+
+    public static boolean validateDistanceTravelled(String input) {
+        int distance = Integer.parseInt(input);
+        return distance >= 0 && distance <= 1000000;
+    }
+
+    public static boolean validateModelYear(String input) {
+        int year = Integer.parseInt(input);
+        return year >= 2000 && year <= 2024;
+    }
+
+    public static boolean validateCompany(String input) {
+        Pattern pattern = Pattern.compile(COMPANY_REGEX);
+        Matcher matcher = pattern.matcher(input);
+        return matcher.matches();
+    }
+
+    public static boolean validatePrice(String input) {
+        double price = Double.parseDouble(input);
+        return price >= 500 && price <= 900000;
+    }
+
+    public static boolean validateEmail(String input) {
+        Pattern pattern = Pattern.compile(EMAIL_REGEX);
+        Matcher matcher = pattern.matcher(input);
+        return matcher.matches();
+    }
+
+    public static boolean validateUsername(String input) {
+        Pattern pattern = Pattern.compile(USERNAME_REGEX);
+        Matcher matcher = pattern.matcher(input);
+        return matcher.matches();
+    }
+
+    public static boolean validatePassword(String input) {
+        Pattern pattern = Pattern.compile(PASSWORD_REGEX);
+        Matcher matcher = pattern.matcher(input);
+        return matcher.matches();
+    }
+
+    public static void main(String[] args) {
+        // Use Jsoup to scrape data from the website
+        try {
+            Document doc = Jsoup.connect("http://your-website-url.com").get();
+            Element distanceElement = doc.getElementById("distance-id"); // Replace "distance-id" with the actual ID of the distance input element
+            String distanceValue = distanceElement.val(); // Assuming the input value is stored in a "value" attribute
+            
+            Element modelYearElement = doc.getElementById("year-id"); // Replace "year-id" with the actual ID of the year input element
+            String modelYearValue = modelYearElement.val();
+            
+            Element companyElement = doc.getElementById("company-id"); // Replace "company-id" with the actual ID of the company input element
+            String companyValue = companyElement.val();
+            
+            Element priceElement = doc.getElementById("price-id"); // Replace "price-id" with the actual ID of the price input element
+            String priceValue = priceElement.val();
+            
+            Element emailElement = doc.getElementById("email-id"); // Replace "email-id" with the actual ID of the email input element
+            String emailValue = emailElement.val();
+            
+            Element usernameElement = doc.getElementById("username-id"); // Replace "username-id" with the actual ID of the username input element
+            String usernameValue = usernameElement.val();
+            
+            Element passwordElement = doc.getElementById("password-id"); // Replace "password-id" with the actual ID of the password input element
+            String passwordValue = passwordElement.val();
+
+            // Validate inputs
+            if (validateDistanceTravelled(distanceValue)) {
+                System.out.println("Distance travelled input is valid: " + distanceValue);
+            } else {
+                System.out.println("Invalid distance travelled input: " + distanceValue);
+            }
+
+            if (validateModelYear(modelYearValue)) {
+                System.out.println("Model year input is valid: " + modelYearValue);
+            } else {
+                System.out.println("Invalid model year input: " + modelYearValue);
+            }
+
+            if (validateCompany(companyValue)) {
+                System.out.println("Company input is valid: " + companyValue);
+            } else {
+                System.out.println("Invalid company input: " + companyValue);
+            }
+
+            if (validatePrice(priceValue)) {
+                System.out.println("Price input is valid: " + priceValue);
+            } else {
+                System.out.println("Invalid price input: " + priceValue);
+            }
+
+            if (validateEmail(emailValue)) {
+                System.out.println("Email input is valid: " + emailValue);
+            } else {
+                System.out.println("Invalid email input: " + emailValue);
+            }
+
+            if (validateUsername(usernameValue)) {
+                System.out.println("Username input is valid: " + usernameValue);
+            } else {
+                System.out.println("Invalid username input: " + usernameValue);
+            }
+
+            if (validatePassword(passwordValue)) {
+                System.out.println("Password input is valid: " + passwordValue);
+            } else {
+                System.out.println("Invalid password input: " + passwordValue);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
