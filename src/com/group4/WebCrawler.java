@@ -12,7 +12,7 @@ import java.nio.file.Paths;
 /**
  * Class to crawl web
  *
- * @author Akshat Soni
+ * @author Haseeb Shams
  */
 public class WebCrawler {
     static final String folderPath = ".\\res\\pages\\";

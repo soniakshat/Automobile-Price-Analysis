@@ -9,16 +9,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DataValidation {
-
-    // Regular expressions for validating input
-    private static final String DISTANCE_TRAVELLED_REGEX = "\\d+"; // Matches positive integers
-    private static final String MODEL_YEAR_REGEX = "\\d{4}"; // Matches four-digit numbers
-    private static final String COMPANY_REGEX = "[a-zA-Z\\s]+"; // Matches alphabets and spaces
-    private static final String PRICE_REGEX = "\\d+(\\.\\d+)?"; // Matches positive decimal numbers
-    private static final String EMAIL_REGEX = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$"; // Matches email format
-    private static final String USERNAME_REGEX = "^[a-zA-Z0-9_]+$";
-    private static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$";
-
     public static boolean validateDistanceTravelled(String input) {
         int distance = Integer.parseInt(input);
         return distance >= 0 && distance <= 1000000;
@@ -30,7 +20,7 @@ public class DataValidation {
     }
 
     public static boolean validateCompany(String input) {
-        Pattern pattern = Pattern.compile(COMPANY_REGEX);
+        Pattern pattern = Pattern.compile(Utils.REGEX_COMPANY);
         Matcher matcher = pattern.matcher(input);
         return matcher.matches();
     }
@@ -41,19 +31,19 @@ public class DataValidation {
     }
 
     public static boolean validateEmail(String input) {
-        Pattern pattern = Pattern.compile(EMAIL_REGEX);
+        Pattern pattern = Pattern.compile(Utils.REGEX_EMAIL);
         Matcher matcher = pattern.matcher(input);
         return matcher.matches();
     }
 
     public static boolean validateUsername(String input) {
-        Pattern pattern = Pattern.compile(USERNAME_REGEX);
+        Pattern pattern = Pattern.compile(Utils.REGEX_USERNAME);
         Matcher matcher = pattern.matcher(input);
         return matcher.matches();
     }
 
     public static boolean validatePassword(String input) {
-        Pattern pattern = Pattern.compile(PASSWORD_REGEX);
+        Pattern pattern = Pattern.compile(Utils.REGEX_PASSWORD);
         Matcher matcher = pattern.matcher(input);
         return matcher.matches();
     }
