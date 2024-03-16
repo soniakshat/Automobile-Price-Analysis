@@ -1,0 +1,139 @@
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class DataValidation {
+
+    // Regular expressions for validating input
+    private static final String DISTANCE_TRAVELLED_REGEX = "\\d+"; // Matches positive integers
+    private static final String MODEL_YEAR_REGEX = "\\d{4}"; // Matches four-digit numbers
+    private static final String COMPANY_REGEX = "[a-zA-Z\\s]+"; // Matches alphabets and spaces
+    private static final String PRICE_REGEX = "\\d+(\\.\\d+)?"; // Matches positive decimal numbers
+    private static final String EMAIL_REGEX = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$"; // Matches email format
+    private static final String USERNAME_REGEX = "^[a-zA-Z0-9_]+$"; // Matches alphanumeric and underscores
+    private static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$"; // Matches password criteria: at least 8 characters with at least one digit, one lowercase letter, and one uppercase letter
+
+    public static boolean validateDistanceTravelled(String input) {
+        // Check if distance traveled is within range
+        int distance = Integer.parseInt(input);
+        return distance >= 0 && distance <= 1000000;
+    }
+
+    public static boolean validateModelYear(String input) {
+        // Check if model year is within range
+        int year = Integer.parseInt(input);
+        return year >= 2000 && year <= 2024;
+    }
+
+    public static boolean validateCompany(String input) {
+        // Additional logic to check if the company exists could be added here
+        // For simplicity, just validate against the regex for now
+        Pattern pattern = Pattern.compile(COMPANY_REGEX);
+        Matcher matcher = pattern.matcher(input);
+        return matcher.matches();
+    }
+
+    public static boolean validatePrice(String input) {
+        // Check if price is within range
+        double price = Double.parseDouble(input);
+        return price >= 500 && price <= 900000;
+    }
+
+    public static boolean validateEmail(String input) {
+        // Compile the regular expression pattern
+        Pattern pattern = Pattern.compile(EMAIL_REGEX);
+        // Match the input against the pattern
+        Matcher matcher = pattern.matcher(input);
+        // Return true if the input matches the pattern, false otherwise
+        return matcher.matches();
+    }
+
+    public static boolean validateUsername(String input) {
+        // Compile the regular expression pattern
+        Pattern pattern = Pattern.compile(USERNAME_REGEX);
+        // Match the input against the pattern
+        Matcher matcher = pattern.matcher(input);
+        // Return true if the input matches the pattern, false otherwise
+        return matcher.matches();
+    }
+
+    public static boolean validatePassword(String input) {
+        // Compile the regular expression pattern
+        Pattern pattern = Pattern.compile(PASSWORD_REGEX);
+        // Match the input against the pattern
+        Matcher matcher = pattern.matcher(input);
+        // Return true if the input matches the pattern, false otherwise
+        return matcher.matches();
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Prompt user for input and provide examples
+        System.out.print("Enter distance travelled by the car in miles/hour (e.g., 50000): ");
+        String distanceTravelledInput = scanner.nextLine();
+
+        System.out.print("Enter model year of the car (e.g., 2018): ");
+        String modelYearInput = scanner.nextLine();
+
+        System.out.print("Enter company of the car (e.g., Toyota): ");
+        String companyInput = scanner.nextLine();
+
+        System.out.print("Enter price of the car (e.g., 25000.50): ");
+        String priceInput = scanner.nextLine();
+
+        System.out.print("Enter your email ID (e.g., example@example.com): ");
+        String emailInput = scanner.nextLine();
+
+        System.out.print("Enter username: ");
+        String usernameInput = scanner.nextLine();
+
+        System.out.print("Enter password: ");
+        String passwordInput = scanner.nextLine();
+
+        // Validate inputs
+        if (validateDistanceTravelled(distanceTravelledInput)) {
+            System.out.println("\n Distance travelled input is valid: " + distanceTravelledInput);
+        } else {
+            System.out.println("Invalid distance travelled input: " + distanceTravelledInput);
+        }
+
+        if (validateModelYear(modelYearInput)) {
+            System.out.println("Model year input is valid: " + modelYearInput);
+        } else {
+            System.out.println("Invalid model year input: " + modelYearInput);
+        }
+
+        if (validateCompany(companyInput)) {
+            System.out.println("Company input is valid: " + companyInput);
+        } else {
+            System.out.println("Invalid company input: " + companyInput);
+        }
+
+        if (validatePrice(priceInput)) {
+            System.out.println("Price input is valid: " + priceInput);
+        } else {
+            System.out.println("Invalid price input: " + priceInput);
+        }
+
+        if (validateEmail(emailInput)) {
+            System.out.println("Email input is valid: " + emailInput);
+        } else {
+            System.out.println("Invalid email input: " + emailInput);
+        }
+
+        if (validateUsername(usernameInput)) {
+            System.out.println("Username input is valid: " + usernameInput);
+        } else {
+            System.out.println("Invalid username input: " + usernameInput);
+        }
+
+        if (validatePassword(passwordInput)) {
+            System.out.println("Password input is valid");
+        } else {
+            System.out.println("Invalid password input");
+        }
+
+        scanner.close();
+    }
+}
