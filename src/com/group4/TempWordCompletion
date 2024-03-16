@@ -1,0 +1,115 @@
+import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
+class TrieNode {
+    TrieNode[] children;
+    boolean isEndOfWord;
+
+    public TrieNode() {
+        children = new TrieNode[26]; // Assuming only lowercase English letters
+        isEndOfWord = false;
+    }
+}
+
+class Trie {
+    private TrieNode root;
+
+    public Trie() {
+        root = new TrieNode();
+    }
+
+    public void insert(String word) {
+        TrieNode current = root;
+        for (char c : word.toCharArray()) {
+            int index = c - 'a';
+            if (current.children[index] == null) {
+                current.children[index] = new TrieNode();
+            }
+            current = current.children[index];
+        }
+        current.isEndOfWord = true;
+    }
+
+    public List<String> findWordsWithPrefix(String prefix) {
+        List<String> words = new ArrayList<>();
+        TrieNode current = root;
+        for (char c : prefix.toCharArray()) {
+            int index = c - 'a';
+            if (current.children[index] == null) {
+                return words; // Prefix not found, return empty list
+            }
+            current = current.children[index];
+        }
+        findWordsWithPrefixHelper(prefix, current, words);
+        return words;
+    }
+
+    private void findWordsWithPrefixHelper(String prefix, TrieNode node, List<String> words) {
+        if (node.isEndOfWord) {
+            words.add(prefix);
+        }
+
+        for (int i = 0; i < 26; i++) {
+            if (node.children[i] != null) {
+                char c = (char) ('a' + i);
+                findWordsWithPrefixHelper(prefix + c, node.children[i], words);
+            }
+        }
+    }
+}
+
+public class WordCompletion {
+    public static void main(String[] args) {
+        List<String> carWordList = new ArrayList<>();
+        Scanner sc = new Scanner(System.in);
+        carWordList.add("toyota");
+        carWordList.add("honda");
+        carWordList.add("nissan");
+        carWordList.add("bmw");
+        carWordList.add("audi");
+        carWordList.add("mercedes");
+        carWordList.add("ford");
+        carWordList.add("chevrolet");
+        carWordList.add("volkswagen");
+        carWordList.add("hyundai");
+        carWordList.add("kia");
+        carWordList.add("mazda");
+
+        System.out.println("List of car companies and models: ");
+        Trie trie = new Trie();
+        for (String word : carWordList) {
+            trie.insert(word);
+            System.out.println(word);
+        }
+        System.out.println();
+
+
+        boolean continueTakingInput = true;
+        while (continueTakingInput) {
+            System.out.println("Type in letters to see all possible car companies and models: ");
+            // Specify the prefix to search for
+            String prefix = sc.nextLine();
+            List<String> completions = trie.findWordsWithPrefix(prefix);
+            if (completions.isEmpty()) {
+                System.out.println("No matched car companies or models found with the prefix '" + prefix + "'");
+            } else {
+                System.out.println("Car companies and models starting with the prefix '" + prefix + "':");
+                for (String word : completions) {
+                    System.out.println(word);
+                }
+            }
+            System.out.print("Do you want to continue finding other sequences? (y/n): ");
+            String isContinue = sc.nextLine();
+            if (isContinue.equals("y")) {
+                continueTakingInput = true;
+            } else if (isContinue.equals("n")) {
+                continueTakingInput = false;
+                System.out.println("Word completion complete!");
+            } else {
+                System.out.println("Invalid Input");
+                continueTakingInput = false;
+            }
+        }
+    }
+}
