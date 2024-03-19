@@ -1,54 +1,42 @@
 package com.group4;
 
+import java.io.FileWriter;
+import java.io.IOException;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 /**
- * Class to crawl web
  *
- * @author Haseeb Shams
- */
+ * Class to crawl web
+ * @author Akshat Soni
+ * */
 public class WebCrawler {
-    static final String folderPath = ".\\res\\pages\\";
-    public static void main(String[] args) {
-        String[] urls = {"https://www.motorcitychrysler.ca/used/", "https://www.carpages.ca/ontario/windsor/used-cars/"};
+	 public static void main(String[] args) {
+	        String[] urls = {"https://www.motorcitychrysler.ca/used/", "https://www.carpages.ca/ontario/windsor/used-cars/", "https://www.autotrader.ca/cars/on/windsor/"};
 
-        for (String url : urls) {
-            fetchAndSaveHtml(url);
-        }
-    }
+	        for (String url : urls) {
+	            fetchAndSaveHtml(url);
+	        }
+	    }
 
-    public static void fetchAndSaveHtml(String url) {
-        try {
-            Document document = Jsoup.connect(url).get();
+	    public static void fetchAndSaveHtml(String url) {
+	        try {
+	            Document document = Jsoup.connect(url).get();
 
-            String htmlCode = document.html();
+	            String htmlCode = document.html();
 
-            File webPageFolder = new File(folderPath);
+	            String fileName = "html_output_" + System.currentTimeMillis() + ".txt";
+	            try (FileWriter writer = new FileWriter(fileName)) {
+	                writer.write(htmlCode);
+	            }
 
-            if(!webPageFolder.exists()){
-                Files.createDirectories(Paths.get(folderPath));
-            }
+	            CustomPrint.println("HTML code from " + url + " saved to file: " + fileName);
+	            CustomPrint.println("\n------------------------------------------------\n");
 
-            if(webPageFolder.exists() && webPageFolder.isDirectory()){
-
-                String fileName = "html_output_" + System.currentTimeMillis() + ".txt";
-                try (FileWriter writer = new FileWriter(folderPath+fileName)) {
-                    writer.write(htmlCode);
-                }
-
-                CustomPrint.println("HTML code from " + url + " saved to file: " + fileName);
-                CustomPrint.println("\n------------------------------------------------\n");
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	
 }
