@@ -3,7 +3,48 @@ package com.group4;
 /**
  *
  * Class to find search frequency
- * @author Akshat Soni
+ * @author Aniket Patel
  * */
+import java.util.*;
+
 public class SearchFrequency {
+    private final TreeMap<String, Integer> searchFrequency;
+
+    public SearchFrequency() {
+        searchFrequency = new TreeMap<>();
+    }
+
+    // Method to track search frequency
+    public void trackSearch(String word) {
+        word = word.toLowerCase(); // Convert word to lowercase for case-insensitive search
+        searchFrequency.put(word, searchFrequency.getOrDefault(word, 0) + 1);
+    }
+
+    // Method to display search frequency for all words
+    public void displaySearchFrequency() {
+        System.out.println("Search Frequency:");
+        for (Map.Entry<String, Integer> entry : searchFrequency.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        SearchFrequency tracker = new SearchFrequency();
+
+        while (true) {
+            System.out.print("Enter a word to search (type 'X' or 'x' to exit): ");
+            String word = scanner.nextLine();
+
+            if (word.equalsIgnoreCase("x")) {
+                break;
+            }
+
+            tracker.trackSearch(word);
+            tracker.displaySearchFrequency();
+        }
+
+        scanner.close();
+    }
+
 }

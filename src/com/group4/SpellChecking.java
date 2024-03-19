@@ -1,133 +1,89 @@
 package com.group4;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
 public class SpellChecking {
-    private static Map<String, String> myDictionary = new HashMap<>();
 
-    // Function to return similar words
-    private static List<String> fuzzySearch(String query) {
-        List<String> similarWords = new ArrayList<>();
+    private final Set<String> dictionary;
 
-        // Calculate Edit distance between two words
-        for (String word : myDictionary.keySet()) {
-            int distance = calculateEditDistance(query, word.toLowerCase());
-            if (distance <= 3) { // Set a threshold(max distance) for similarity
-                similarWords.add(word);
-            }
-        }
-        return similarWords;
+    public SpellChecking(Set<String> dictionary) {
+        this.dictionary = dictionary;
     }
 
-    // Function for edit distance
-    private static int calculateEditDistance(String s1, String s2) {
-        int[][] dp = new int[s1.length() + 1][s2.length() + 1];
-        for (int a = 0; a <= s1.length(); a++) {
-            for (int b = 0; b <= s2.length(); b++) {
-                if (a == 0) {
-                    dp[a][b] = b;
-                } else if (b == 0) {
-                    dp[a][b] = a;
+    // Method to find the closest word in the dictionary using edit distance
+    public String findClosestWord(String word) {
+        int minDistance = 4;
+        String closestWord = null;
+
+        for (String dictWord : dictionary) {
+            int distance = editDistance(word, dictWord);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestWord = dictWord;
+            }
+        }
+
+        return closestWord;
+    }
+
+    // Method to calculate the edit distance between two words
+    private int editDistance(String word1, String word2) {
+        int m = word1.length();
+        int n = word2.length();
+
+        int[][] dp = new int[m + 1][n + 1];
+
+        for (int i = 0; i <= m; i++) {
+            for (int j = 0; j <= n; j++) {
+                if (i == 0) {
+                    dp[i][j] = j;
+                } else if (j == 0) {
+                    dp[i][j] = i;
+                } else if (word1.charAt(i - 1) == word2.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1];
                 } else {
-                    dp[a][b] = min(
-                            dp[a - 1][b - 1] + (s1.charAt(a - 1) == s2.charAt(b - 1) ? 0 : 1),
-                            dp[a - 1][b] + 1,
-                            dp[a][b - 1] + 1);
+                    dp[i][j] = 1 + Math.min(dp[i - 1][j - 1], Math.min(dp[i][j - 1], dp[i - 1][j]));
                 }
             }
         }
-        return dp[s1.length()][s2.length()];
+        return dp[m][n];
     }
-
-    // To get minimum distance
-    private static int min(int a, int b, int c) {
-        return Math.min(a, Math.min(b, c));
-    }
-
 
     public static void main(String[] args) {
+        // Example dictionary
+        Set<String> dictionary = new HashSet<>();
+        dictionary.add("consider");
+        dictionary.add("minute");
+        dictionary.add("accord");
+        dictionary.add("evident");
+        dictionary.add("practice");
+        dictionary.add("intend");
+        dictionary.add("concern");
+        dictionary.add("commit");
+        dictionary.add("establish");
+        dictionary.add("approach");
+        dictionary.add("obtain");
+        dictionary.add("abstain");
 
-        // Pre-Adding words and meanings to the dictionary
-        CustomPrint.println("Pre adding words: ");
-        myDictionary.put("consider", "deem to be");
-        myDictionary.put("minute", "infinitely or immeasurably small");
-        myDictionary.put("accord", "concurrence of opinion");
-        myDictionary.put("evident", "clearly revealed to the mind or the senses or judgement");
-        myDictionary.put("practice", "a customary way of operation or behaviour");
-        myDictionary.put("intend", "have in mind as purpose");
-        myDictionary.put("concern", "something that interests you because it is important");
-        myDictionary.put("commit", "deem to be");
-        myDictionary.put("establish", "set up or found");
-        myDictionary.put("approach", "move forward");
-        myDictionary.put("obtain", "to come into possesion of somthing");
-        myDictionary.put("abstain", "restrain oneself");
-        CustomPrint.println("\n\n");
-        // PROGRAM
-        // Print Menu
-        CustomPrint.println("Enter '1' to ADD a word to dictionary \n"
-                + "Enter '2' to REMOVE a word from dictionary \n"
-                + "Enter '3' to LOOK for a word's meaning \n"
-                + "Enter '4' to LIST all words in the dictionary \n"
-                + "Enter 'X' to EXIT");
+        SpellChecking spellChecker = new SpellChecking(dictionary);
 
-        String word, meaning;
-        String choice=null;
-        Scanner scn = new Scanner(System.in);
-        // looping switch
-        while(choice!="X") {
-            CustomPrint.println("\nEnter your choice: ");
-            choice = scn.nextLine();
-            // switch case for the menu
-            switch(choice) {
-                // ADD
-                case "1":
-                    CustomPrint.println("Enter Word: ");
-                    word = scn.nextLine();
-                    if (myDictionary.containsKey(word) != true) {
-                        CustomPrint.println("Enter its Meaning: ");
-                        meaning = scn.nextLine();
-                        myDictionary.put(word, meaning);
-                    }else
-                        CustomPrint.print("Word already present!! Try another word.\n");
-                    break;
-                // REMOVE
-                case "2":
-                    CustomPrint.println("Enter Word to remove: ");
-                    word = scn.nextLine();
-                    if (myDictionary.containsKey(word) == true)
-                        myDictionary.remove(word);
-                    else
-                        CustomPrint.println("WORD NOT FOUND!!\n"
-                                + "Suggested words for:\n '" + word + "': " + fuzzySearch(word));
-                    break;
-                // SEARCH | LOOKUP
-                case "3":
-                    CustomPrint.println("Enter Word for its meaning: ");
-                    word = scn.nextLine();
-                    if (myDictionary.containsKey(word) == true)
-                        CustomPrint.println("Meaning: " + myDictionary.get(word));
-                    else
-                        CustomPrint.println("WORD NOT FOUND!!\n"
-                                + "Suggested words for:\n '" + word + "': " + fuzzySearch(word));
-                    break;
-                // LIST	ALL
-                case "4":
-                    CustomPrint.println("Your Dictionary: ");
-                    CustomPrint.println(myDictionary);
-                    break;
-                // EXIT
-                case "X": case "x":
-                    CustomPrint.println("Thank You");
-                    System.exit(0);
-                    // WRONG INPUT
-                default:
-                    CustomPrint.println("Plz enter a valid choice: ");
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter a word for spell check: ");
+        String inputWord = scanner.nextLine().toLowerCase();
+
+        if (dictionary.contains(inputWord)) {
+            System.out.println("Word is spelled correctly.");
+        } else {
+            String closestWord = spellChecker.findClosestWord(inputWord);
+            if (closestWord != null) {
+                System.out.println("Did you mean: " + closestWord + "?");
+            } else {
+                System.out.println("No alternative word suggestion found.");
             }
         }
-        scn.close();
+
+        scanner.close();
     }
 }
