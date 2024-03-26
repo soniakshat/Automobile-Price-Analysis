@@ -1,5 +1,7 @@
 package com.group4;
 
+import static java.lang.StringTemplate.STR;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -65,7 +67,8 @@ public class Driver {
 
                 case Utils.Task.RankPage: {
                     CustomPrint.println("Page Ranking - Search word: ");
-                    InvertedIndexing.searchInFile();
+                    String word = new Scanner(System.in).next();
+                    InvertedIndexing.searchInFile(word);
                     break;
                 }
 
