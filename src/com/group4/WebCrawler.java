@@ -1,42 +1,60 @@
 package com.group4;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 /**
- *
  * Class to crawl web
- * @author Akshat Soni
- * */
+ *
+ * @author Haseeb Shams
+ */
 public class WebCrawler {
-	 public static void main(String[] args) {
-	        String[] urls = {"https://www.motorcitychrysler.ca/used/", "https://www.carpages.ca/ontario/windsor/used-cars/", "https://www.autotrader.ca/cars/on/windsor/"};
+    private static final String folderPath = ".\\res\\generated\\pages\\";
+    private static String[] urls = {"https://www.motorcitychrysler.ca/used/",
+            "https://www.carpages.ca/ontario/windsor/used-cars/",
+            "https://www.autotrader.ca/cars/on/windsor/"};
 
-	        for (String url : urls) {
-	            fetchAndSaveHtml(url);
-	        }
-	    }
+    public void main(String[] args) {
+		CrawlWebsites(urls);
+    }
 
-	    public static void fetchAndSaveHtml(String url) {
-	        try {
-	            Document document = Jsoup.connect(url).get();
+	public static void CrawlWebsites(String[] urls){
+		for (String url : urls) {
+			fetchAndSaveHtml(url);
+		}
+	}
 
-	            String htmlCode = document.html();
+    private static void fetchAndSaveHtml(String url) {
+        try {
+            Document document = Jsoup.connect(url).get();
 
-	            String fileName = "html_output_" + System.currentTimeMillis() + ".txt";
-	            try (FileWriter writer = new FileWriter(fileName)) {
-	                writer.write(htmlCode);
-	            }
+            String htmlCode = document.html();
 
-	            CustomPrint.println("HTML code from " + url + " saved to file: " + fileName);
-	            CustomPrint.println("\n------------------------------------------------\n");
+            File webPageFolder = new File(folderPath);
 
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
-	    }
-	
+            if (!webPageFolder.exists()) {
+                Files.createDirectories(Paths.get(folderPath));
+            }
+
+            if (webPageFolder.exists() && webPageFolder.isDirectory()) {
+
+                String webSiteName = url.replaceAll(".*www\\.(.*?)\\..*", "$1");
+
+                String fileName = "Cache_" + webSiteName + ".txt";
+                try (FileWriter writer = new FileWriter(folderPath + fileName)) {
+                    writer.write(htmlCode);
+                }
+                CustomPrint.println("Crawler", "Crawled File Saved: " + fileName);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

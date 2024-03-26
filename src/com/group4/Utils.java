@@ -1,7 +1,16 @@
 package com.group4;
 
 public class Utils {
+    public static enum Task {
+        CrawlWebsite,
+        DeleteCacheAndReCrawl,
+        RankPage,
+        WordSuggestion,
+        AutoComplete,
+       Exit,
+    };
     public static final String REGEX_DISTANCE_TRAVELLED = "\\d+"; // Matches positive integers
+    public static final String REGEX_URL = "((http|https)://)(www.)?[a-zA-Z0-9@:%._\\+~#?&//=]{2,256}\\.[a-z]{2,6}([-a-zA-Z0-9@:%._\\+~#?&//=]*)";
     public static final String REGEX_MODEL_YEAR = "\\d{4}"; // Matches four-digit numbers
     public static final String REGEX_COMPANY = "[a-zA-Z\\s]+"; // Matches alphabets and spaces
     public static final String REGEX_PRICE = "\\d+(\\.\\d+)?"; // Matches positive decimal numbers
