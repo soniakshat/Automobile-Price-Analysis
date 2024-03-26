@@ -1,9 +1,10 @@
 package com.group4;
 
+import java.util.*;
+import java.util.regex.Pattern;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -20,8 +21,8 @@ public class InvertedIndexing {
         this.invertedIndexing = new HashMap<>();
     }
 
-    public static void searchInFile() {
-        List<String> imageUrls = new ArrayList<>();
+    public static void searchInFile(String word) {
+        List<CarPage> carPages = new ArrayList<>();
 
         // Read HTML content from files and extract alt attribute values
         try {
@@ -32,60 +33,61 @@ public class InvertedIndexing {
                 Elements imgTags = doc.select("img[alt]");
                 for (Element imgTag : imgTags) {
                     String altText = imgTag.attr("alt");
-                    imageUrls.add(altText);
+                    String url = imgTag.attr("src");
+                    if (!Pattern.compile("Image \\d+ of \\d+").matcher(altText).find()) { // Exclude images of format "Image X of Y"
+                        carPages.add(new CarPage(url, altText, 1, extractTerms(altText)));
+                    }
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        // Perform inverted indexing and page ranking on extracted URLs
-        performIndexingAndRanking(imageUrls);
-    }
-
-    private static void performIndexingAndRanking(List<String> imageUrls) {
         // Perform inverted indexing
         InvertedIndexing invertedIndex = new InvertedIndexing();
-        for (String url : imageUrls) {
-            invertedIndex.addDocument(url, extractTerms(url));
+        for (CarPage page : carPages) {
+            invertedIndex.addDocument(page.getModel(), extractTerms(page.getModel()));
         }
 
         // Perform page ranking
-        List<CarPage> pages = new ArrayList<>();
-        for (String url : imageUrls) {
-            pages.add(new CarPage(url, 1, extractTerms(url)));
-        }
-        PageRanking.rankPages(pages);
+        PageRanking.rankPages(carPages);
 
-        // User input for searching a car model
-        try (Scanner scanner = new Scanner(System.in)) {
-            System.out.print("Enter a car model to search: ");
-            String searchModel = scanner.nextLine();
+        // Filter out models with URLs not starting with "https"
+        carPages.removeIf(page -> !page.getUrl().startsWith("https"));
 
-            // Searching for the car model in the inverted index
-            Set<String> searchResults = invertedIndex.search(searchModel.toLowerCase());
+        // Searching for the word in the inverted index
+        Set<String> searchResults = invertedIndex.search(word.toLowerCase());
 
-            // Printing search results
-            if (!searchResults.isEmpty()) {
-                System.out.println("\nMatching Car Models:");
-                for (String result : searchResults) {
-                    System.out.println(result);
-                }
-            } else {
-                System.out.println("\nNo matching car models found.");
+        // Printing search results
+        if (!searchResults.isEmpty()) {
+            System.out.println("\nMatching Car Models:");
+            for (String result : searchResults) {
+                System.out.println(result);
             }
+        } else {
+            System.out.println("\nNo matching car models found.");
         }
 
-        // Printing ranked pages
-        System.out.println("\nRanked Pages:");
-        for (CarPage page : pages) {
-            System.out.println("URL: " + page.getUrl() + ", Rank: " + page.calculateRank());
+        // Sort car pages based on the input word or ranking
+        Comparator<CarPage> comparator = Comparator.comparingDouble(CarPage::calculateRank).reversed();
+        if (!word.isEmpty()) {
+            comparator = Comparator.comparingInt(page -> {
+                String model = page.getModel().toLowerCase();
+                return model.contains(word.toLowerCase()) ? 0 : 1;
+            });
+        }
+        carPages.sort(comparator);
+
+        // Printing ranked models with corresponding URLs
+        System.out.println("\nRanked Models:");
+        for (CarPage page : carPages) {
+            System.out.println("\nModel: " + page.getModel() + ", \nRank: " + page.calculateRank() + ", \nURL: " + page.getUrl());
         }
     }
 
-    private static List<String> extractTerms(String url) {
-        // Split the URL string into words and return
-        return Arrays.asList(url.split("\\s+"));
+    private static List<String> extractTerms(String model) {
+        // Split the model string into words and return
+        return Arrays.asList(model.split("\\s+"));
     }
 
     public void addDocument(String document, List<String> terms) {
@@ -99,7 +101,7 @@ public class InvertedIndexing {
     }
 
     public static void main(String[] args) {
-        searchInFile();
+        searchInFile("honda"); // Provide a default search word here
     }
 }
 
@@ -112,11 +114,13 @@ class PageRanking {
 
 class CarPage {
     private final String url;
+    private final String model;
     private final int frequencyCount;
     private final List<String> searchKeywords;
 
-    public CarPage(String url, int frequencyCount, List<String> searchKeywords) {
+    public CarPage(String url, String model, int frequencyCount, List<String> searchKeywords) {
         this.url = url;
+        this.model = model;
         this.frequencyCount = frequencyCount;
         this.searchKeywords = searchKeywords;
     }
@@ -127,6 +131,10 @@ class CarPage {
 
     public String getUrl() {
         return url;
+    }
+
+    public String getModel() {
+        return model;
     }
 
     public List<String> getSearchKeywords() {
