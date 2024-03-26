@@ -17,7 +17,7 @@ public class CustomPrint {
     static void print(Object obj) {
         if (!shouldPrintComments)
             return;
-        System.out.println(obj);
+        System.out.print(obj);
     }
 
     /**
@@ -28,7 +28,7 @@ public class CustomPrint {
     static void print(String TAG, Object obj) {
         if (!shouldPrintComments)
             return;
-        System.out.println("[" + TAG + "] :: " + obj);
+        System.out.print(STR."[\{TAG}] :: \{obj}");
     }
 
     /**
@@ -49,7 +49,7 @@ public class CustomPrint {
     static void println(String TAG, Object obj) {
         if (!shouldPrintComments)
             return;
-        System.out.println("[" + TAG + "] :: " + obj);
+        System.out.println(STR."[\{TAG}] :: \{obj}");
     }
 
     /**
@@ -70,6 +70,6 @@ public class CustomPrint {
     static void printError(String TAG, Object obj) {
         if (!shouldPrintComments)
             return;
-        System.err.println("[" + TAG + "] :: " + obj);
+        System.err.println(STR."[\{TAG}] :: \{obj}");
     }
 }

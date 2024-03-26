@@ -13,10 +13,16 @@ class TrieNode {
 }
 
 class Trie {
-    private TrieNode root;
+    private final TrieNode root;
 
     Trie() {
         root = new TrieNode();
+    }
+
+    public void insertAll(List<String> words) {
+        for (String word : words) {
+            insert(word);
+        }
     }
 
     // Inserts a word into the trie.
@@ -75,9 +81,10 @@ class Trie {
 }
 
 public class WordCompletion {
+    private static final Trie trie = new Trie();
+
     public static void main(String[] args) {
         // Example usage
-        Trie trie = new Trie();
         // Inserting some sample automobile data into the trie
         trie.insert("Toyota Camry");
         trie.insert("Toyota Corolla");
@@ -86,8 +93,17 @@ public class WordCompletion {
         trie.insert("Honda Accord");
         trie.insert("Ford Mustang");
 
-        String prefix = "Hon";
-        List<String> completions = trie.findWordsWithPrefix(prefix);
-        CustomPrint.println("Automobile models with prefix '" + prefix + "': " + completions);
+        completionSuggestions("Hon");
+    }
+
+    public static void completionSuggestions(String incompleteWord) {
+        List<String> suggestionList = trie.findWordsWithPrefix(incompleteWord);
+        if (!suggestionList.isEmpty()) {
+            CustomPrint.print("AutoComplete", "Suggested auto completed words are: ");
+            for (String word : suggestionList) {
+                CustomPrint.print(STR."\{word}, ");
+            }
+        }
     }
 }
+

@@ -75,45 +75,45 @@ public class DataValidation {
 
             // Validate inputs
             if (validateDistanceTravelled(distanceValue)) {
-                CustomPrint.println("Distance travelled input is valid: " + distanceValue);
+                CustomPrint.println(STR."Distance travelled input is valid: \{distanceValue}");
             } else {
-                CustomPrint.println("Invalid distance travelled input: " + distanceValue);
+                CustomPrint.println(STR."Invalid distance travelled input: \{distanceValue}");
             }
 
             if (validateModelYear(modelYearValue)) {
-                CustomPrint.println("Model year input is valid: " + modelYearValue);
+                CustomPrint.println(STR."Model year input is valid: \{modelYearValue}");
             } else {
-                CustomPrint.println("Invalid model year input: " + modelYearValue);
+                CustomPrint.println(STR."Invalid model year input: \{modelYearValue}");
             }
 
             if (validateCompany(companyValue)) {
-                CustomPrint.println("Company input is valid: " + companyValue);
+                CustomPrint.println(STR."Company input is valid: \{companyValue}");
             } else {
-                CustomPrint.println("Invalid company input: " + companyValue);
+                CustomPrint.println(STR."Invalid company input: \{companyValue}");
             }
 
             if (validatePrice(priceValue)) {
-                CustomPrint.println("Price input is valid: " + priceValue);
+                CustomPrint.println(STR."Price input is valid: \{priceValue}");
             } else {
-                CustomPrint.println("Invalid price input: " + priceValue);
+                CustomPrint.println(STR."Invalid price input: \{priceValue}");
             }
 
             if (validateEmail(emailValue)) {
-                CustomPrint.println("Email input is valid: " + emailValue);
+                CustomPrint.println(STR."Email input is valid: \{emailValue}");
             } else {
-                CustomPrint.println("Invalid email input: " + emailValue);
+                CustomPrint.println(STR."Invalid email input: \{emailValue}");
             }
 
             if (validateUsername(usernameValue)) {
-                CustomPrint.println("Username input is valid: " + usernameValue);
+                CustomPrint.println(STR."Username input is valid: \{usernameValue}");
             } else {
-                CustomPrint.println("Invalid username input: " + usernameValue);
+                CustomPrint.println(STR."Invalid username input: \{usernameValue}");
             }
 
             if (validatePassword(passwordValue)) {
-                CustomPrint.println("Password input is valid: " + passwordValue);
+                CustomPrint.println(STR."Password input is valid: \{passwordValue}");
             } else {
-                CustomPrint.println("Invalid password input: " + passwordValue);
+                CustomPrint.println(STR."Invalid password input: \{passwordValue}");
             }
 
         } catch (IOException e) {

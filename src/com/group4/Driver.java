@@ -4,90 +4,113 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
- *
  * Main class that will run everything
- * @implNote the file ./res/doc/dictionary.txt contains the list of words from Oxford dictionary
  * @author Akshat Soni
- * */
+ */
 public class Driver {
-    private static String[] urls = {"https://www.motorcitychrysler.ca/used/",
+    private static final String[] urls = {"https://www.motorcitychrysler.ca/used/",
             "https://www.carpages.ca/ontario/windsor/used-cars/",
             "https://www.autotrader.ca/cars/on/windsor/"};
+    private static final Set<String> bagOfWords = new HashSet<>();
 
     public static void main(String[] args) {
-        Utils.Task choice;
+        basicIntegration();
+//        advanceIntegration();
+    }
+
+    private static void advanceIntegration() {
+        String exit = null;
         do{
+            CustomPrint.println("=".repeat(30));
+            CustomPrint.println("Instructions", """
+                    This program will give you information about a car by crawling below mentioned websites.""");
+            for(String url: urls){
+                CustomPrint.println("Source", url);
+            }
+            CustomPrint.println("=".repeat(30));
+
+            Set<String> bagOfWords;
+            WebCrawler.CrawlWebsites(urls);
+
+            CustomPrint.print("To exit program enter q");
+            exit = new Scanner(System.in).next();
+        }while(!exit.equals("q"));
+    }
+
+    private static void basicIntegration() {
+        Utils.Task choice;
+        do {
             choice = askForChoice();
             switch (choice) {
-                case Utils.Task.CrawlWebsite:
-                    CustomPrint.println("URL to be crawled: " + urls);
+                case Utils.Task.CrawlWebsite: {
+                    CustomPrint.print(STR."URL to be crawled: ");
+                    for(String u : urls){
+                        CustomPrint.print(STR."\{u}, ");
+                    }
                     WebCrawler.CrawlWebsites(urls);
                     break;
+                }
 
-                case Utils.Task.DeleteCacheAndReCrawl:
+                case Utils.Task.DeleteCacheAndReCrawl: {
                     deleteAllFilesInFolder(".\\res\\generated\\pages\\");
                     WebCrawler.CrawlWebsites(urls);
                     break;
+                }
 
-                case Utils.Task.RankPage:
-                    System.out.println("Page Ranking - Search word: ");
-//                RankPages.searchInFile();
+                case Utils.Task.RankPage: {
+                    CustomPrint.println("Page Ranking - Search word: ");
+                    InvertedIndexing.searchInFile();
                     break;
+                }
 
-                case Utils.Task.WordSuggestion:
-//                System.out.println("Words Suggestion - Search word: ");
-//                word = scanner.nextLine();
-//                corrector = new AutoComplete();
-//
-//                corrector.loadSpellCorrector();
-//                String identicalWord = corrector.findIdenticalWord(word);
-//                if (identicalWord.length() == 0)
-//                    System.out.println("There are no similar words. Please enter the valid word to search");
-//                else
-//                    System.out.println("Identical suggestion found: " + identicalWord);
-
+                case Utils.Task.WordSuggestion: {
+                    CustomPrint.println("Words Suggestion - Search word: ");
+                    String word = new Scanner(System.in).next();
+                    SpellChecking.checkSpelling(word);
                     break;
+                }
 
-                case Utils.Task.AutoComplete:
-//                System.out.println("Auto Complete - Enter word: ");
-//                word = scanner.nextLine();
-//                corrector = new AutoComplete();
-//
-//                corrector.loadSpellCorrector();
-//                ArrayList<String> autoCompleteStr = corrector.autoComplete(word);
-//                System.out.println(autoCompleteStr.toString());
+                case Utils.Task.AutoComplete: {
+                    CustomPrint.println("Auto Complete - Enter word: ");
+                    String word = new Scanner(System.in).next();
+                    WordCompletion.completionSuggestions(word);
                     break;
+                }
 
-                case Utils.Task.Exit:
-                    System.out.println("Exiting program.");
+                case Utils.Task.Exit: {
+                    CustomPrint.println("Exiting program.");
                     break;
+                }
 
-                default:
-                    System.out.println("Please select a valid choice.");
+                default: {
+                    CustomPrint.println("Please select a valid choice.");
                     break;
+                }
             }
-        }while(choice != Utils.Task.Exit);
+        } while (choice != Utils.Task.Exit);
     }
 
     private static boolean isUrlValid(String url) {
         return Pattern.matches(Utils.REGEX_URL, url);
     }
 
-    private static Utils.Task askForChoice(){
-        System.out.println("Select a search engine feature listed below.");
-        System.out.println("---------------------------------------------\n");
-        System.out.println("1. Crawl Websites");
-        System.out.println("2. Delete cache and Re crawl");
-        System.out.println("3. Rank the web pages according to the occurrence of a word");
-        System.out.println("4. Words Suggestion");
-        System.out.println("5. AutoComplete");
-        System.out.println("6. Exit from program\n");
+    private static Utils.Task askForChoice() {
+        CustomPrint.println("Select a search engine feature listed below.");
+        CustomPrint.println("---------------------------------------------\n");
+        CustomPrint.println("1. Crawl Websites");
+        CustomPrint.println("2. Delete cache and Re crawl");
+        CustomPrint.println("3. Rank the web pages according to the occurrence of a word");
+        CustomPrint.println("4. Words Suggestion");
+        CustomPrint.println("5. AutoComplete");
+        CustomPrint.println("6. Exit from program\n");
 
-        System.out.println("Please enter your choice");
+        CustomPrint.println("Please enter your choice");
 
         int choice = new Scanner(System.in).nextInt();
 

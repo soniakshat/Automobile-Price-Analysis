@@ -5,15 +5,10 @@ import java.util.Scanner;
 import java.util.Set;
 
 public class SpellChecking {
-
-    private final Set<String> dictionary;
-
-    public SpellChecking(Set<String> dictionary) {
-        this.dictionary = dictionary;
-    }
+    private static final Set<String> dictionary = new HashSet<>();
 
     // Method to find the closest word in the dictionary using edit distance
-    public String findClosestWord(String word) {
+    public static String findClosestWord(String word) {
         int minDistance = 4;
         String closestWord = null;
 
@@ -29,7 +24,7 @@ public class SpellChecking {
     }
 
     // Method to calculate the edit distance between two words
-    private int editDistance(String word1, String word2) {
+    private static int editDistance(String word1, String word2) {
         int m = word1.length();
         int n = word2.length();
 
@@ -52,8 +47,6 @@ public class SpellChecking {
     }
 
     public static void main(String[] args) {
-        // Example dictionary
-        Set<String> dictionary = new HashSet<>();
         dictionary.add("consider");
         dictionary.add("minute");
         dictionary.add("accord");
@@ -67,23 +60,21 @@ public class SpellChecking {
         dictionary.add("obtain");
         dictionary.add("abstain");
 
-        SpellChecking spellChecker = new SpellChecking(dictionary);
-
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter a word for spell check: ");
         String inputWord = scanner.nextLine().toLowerCase();
+        checkSpelling(inputWord);
+        scanner.close();
+    }
 
-        if (dictionary.contains(inputWord)) {
-            System.out.println("Word is spelled correctly.");
-        } else {
-            String closestWord = spellChecker.findClosestWord(inputWord);
+    public static void checkSpelling(String inputWord) {
+        if (!dictionary.contains(inputWord)) {
+            String closestWord = findClosestWord(inputWord);
             if (closestWord != null) {
-                System.out.println("Did you mean: " + closestWord + "?");
+                CustomPrint.println("SpellChecker", STR."Did you mean: \{closestWord}?");
             } else {
-                System.out.println("No alternative word suggestion found.");
+                CustomPrint.printError("Spell Checker", "No alternative word suggestion found.");
             }
         }
-
-        scanner.close();
     }
 }

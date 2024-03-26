@@ -60,7 +60,7 @@ public class Patterns {
             listResults.add(matcher.group());
         }
         if(!listResults.isEmpty()){
-            CustomPrint.println("Result", listResults + "\n");
+            CustomPrint.println("Result", STR."\{listResults}\n");
         }
         else{
             CustomPrint.printError("Pattern", "No Pattern Found");
@@ -68,9 +68,10 @@ public class Patterns {
     }
 
     public static void main(String[] args) {
-        String input = "Hello, example@email.com\n" +
-                "test@example.com\n" +
-                "emailtest@example.org N9A 4N4 the price was 123.52$ or 123$? my email is example@example.com and my phone number is (123) 456-7890. My address is 123 Main St, Toronto, ON A1A 1A1. The price is $123.45, but we can give you a discount of $123 or 123.45.";
+        String input = """
+                Hello, example@email.com
+                test@example.com
+                emailtest@example.org N9A 4N4 the price was 123.52$ or 123$? my email is example@example.com and my phone number is (123) 456-7890. My address is 123 Main St, Toronto, ON A1A 1A1. The price is $123.45, but we can give you a discount of $123 or 123.45.""";
 
         CustomPrint.println("Input", input);
         CustomPrint.print("\n");

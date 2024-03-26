@@ -32,7 +32,7 @@ public class HtmlParser {
     }
 
     public static void parseCarInformation(File file, String carName) throws IOException {
-        CustomPrint.print("Parser", "Parsing through: " + file.getName());
+        CustomPrint.print("Parser", STR."Parsing through: \{file.getName()}");
         Document doc = Jsoup.parse(file, "UTF-8");
 
         Elements carElements = doc.getElementsByAttributeValueContaining("title", carName);
@@ -44,8 +44,8 @@ public class HtmlParser {
             Element imgElement = carElement.selectFirst("img[src]");
             String imgUrl = imgElement != null ? imgElement.attr("src") : "N/A";
 
-            CustomPrint.println("Title: " + title);
-            CustomPrint.println("Image URL: " + imgUrl + "\n");
+            CustomPrint.println(STR."Title: \{title}");
+            CustomPrint.println(STR."Image URL: \{imgUrl}\n");
         }
     }
 }

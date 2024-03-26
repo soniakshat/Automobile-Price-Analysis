@@ -1,12 +1,12 @@
 package com.group4;
 
+import java.util.*;
+
 /**
  *
  * Class to find search frequency
  * @author Aniket Patel
  * */
-import java.util.*;
-
 public class SearchFrequency {
     private final TreeMap<String, Integer> searchFrequency;
 
@@ -24,7 +24,7 @@ public class SearchFrequency {
     public void displaySearchFrequency() {
         System.out.println("Search Frequency:");
         for (Map.Entry<String, Integer> entry : searchFrequency.entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue());
+            System.out.println(STR."\{entry.getKey()}: \{entry.getValue()}");
         }
     }
 
@@ -43,7 +43,7 @@ public class SearchFrequency {
             tracker.trackSearch(word);
             tracker.displaySearchFrequency();
         }
-
+        
         scanner.close();
     }
 

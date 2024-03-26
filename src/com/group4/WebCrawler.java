@@ -11,12 +11,11 @@ import org.jsoup.nodes.Document;
 
 /**
  * Class to crawl web
- *
  * @author Haseeb Shams
  */
 public class WebCrawler {
     private static final String folderPath = ".\\res\\generated\\pages\\";
-    private static String[] urls = {"https://www.motorcitychrysler.ca/used/",
+    private static final String[] urls = {"https://www.motorcitychrysler.ca/used/",
             "https://www.carpages.ca/ontario/windsor/used-cars/",
             "https://www.autotrader.ca/cars/on/windsor/"};
 
@@ -46,11 +45,11 @@ public class WebCrawler {
 
                 String webSiteName = url.replaceAll(".*www\\.(.*?)\\..*", "$1");
 
-                String fileName = "Cache_" + webSiteName + ".txt";
+                String fileName = STR."Cache_\{webSiteName}.txt";
                 try (FileWriter writer = new FileWriter(folderPath + fileName)) {
                     writer.write(htmlCode);
                 }
-                CustomPrint.println("Crawler", "Crawled File Saved: " + fileName);
+                CustomPrint.println("Crawler", STR."Crawled File Saved: \{fileName}");
             }
 
         } catch (IOException e) {
