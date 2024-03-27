@@ -17,7 +17,7 @@ public class WebCrawler {
     private static final String folderPath = ".\\res\\generated\\pages\\";
     private static final String[] urls = {"https://www.motorcitychrysler.ca/used/",
             "https://www.carpages.ca/ontario/windsor/used-cars/",
-            "https://www.autotrader.ca/cars/on/windsor/"};
+            "https://www.automaxxwindsor.com/used/search.html"};
 
     public void main(String[] args) {
 		CrawlWebsites(urls);
