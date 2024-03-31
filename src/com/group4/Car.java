@@ -1,16 +1,11 @@
 package com.group4;
 
 enum FuelType {
-    Gas,
-    Diesel,
-    Electric,
-    Hybrid,
-    Other
+    Gas, Diesel, Electric, Hybrid, Other
 }
 
 enum TransmissionType {
-    Automatic,
-    NA, Manual
+    Automatic, NA, Manual
 }
 
 public class Car {
@@ -49,5 +44,31 @@ public class Car {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void printDetails() {
+        CustomPrint.println(this);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder data = new StringBuilder();
+        data.append("\nCar Details");
+        data.append("\n").append("-".repeat(10));
+        data.append(STR."\nName: \{name}");
+        data.append(STR."\nPrice: $ \{price}");
+        data.append(STR."\nFuel: \{fuelType}");
+        data.append(STR."\nTransmission: \{transmissionType}");
+        if (kmsDriven >= 0)
+            data.append(STR."\nKms Driven: \{kmsDriven} kms");
+        if (imageUrl != null && !imageUrl.isBlank()) {
+            data.append(STR."\nImage Url: \{imageUrl}");
+        }
+
+        return data.toString();
     }
 }

@@ -1,11 +1,18 @@
 package com.group4;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,11 +20,11 @@ import java.util.List;
 public class SeleniumDriver {
     static final List<Car> listCars = new ArrayList<>();
 
-    static void KijijiAuto() {
+    static void CrawlKijijiAuto() {
         String url = "https://www.kijijiautos.ca/cars/#od=down&sb=rel";
 
-        if(!Utils.isUrlValid(url)){
-            CustomPrint.printError("Selenium Parser",STR."Invalid Url to parse: \{url}");
+        if (!Utils.isUrlValid(url)) {
+            CustomPrint.printError("Selenium Parser", STR."Invalid Url to parse: \{url}");
             return;
         }
 
@@ -26,6 +33,38 @@ public class SeleniumDriver {
         // Create a new ChromeDriver
         WebDriver driver = new ChromeDriver();
 
+        String folderPath = Utils.htmlCacheFolder;
+
+        String webSiteName = url.replaceAll(".*www\\.(.*?)\\..*", "$1");
+        String fileName = STR."Cache_\{webSiteName}.html";
+        File file = new File(folderPath + fileName);
+        if (file.exists()) {
+            CustomPrint.println("Selenium", STR."File Cache Exists :: \{fileName}");
+            url = "file://" + file.getAbsolutePath();
+        } else {
+            try {
+                Document document = Jsoup.connect(url).get();
+                String htmlCode = document.html();
+
+                File webPageFolder = new File(folderPath);
+
+                if (!webPageFolder.exists()) {
+                    Files.createDirectories(Paths.get(folderPath));
+                }
+
+                if (webPageFolder.exists() && webPageFolder.isDirectory()) {
+                    try (FileWriter writer = new FileWriter(folderPath + fileName)) {
+                        writer.write(htmlCode);
+                    }
+                    CustomPrint.println("Selenium", STR."Crawled File Saved: \{fileName}");
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        CustomPrint.println(STR."Trying to open: \{url}");
         // Open the provided page on chrome
         driver.get(url);
 
@@ -63,8 +102,8 @@ public class SeleniumDriver {
             price = price.replaceAll("\\D", "");
             price = price.isEmpty() ? "-1" : price;
 
-            CustomPrint.println("");
-            CustomPrint.println("Car Details", STR."Name: \{name} \tPrice: $\{price}\nFuel: \{fuelType}\tTransmission: \{transmissionType}\nKms Driven: \{kmsDriven} km\nUrl: \{imgUrl}\nLocation: \{location}");
+//            CustomPrint.println("");
+//            CustomPrint.println("Car Details", STR."Name: \{name} \tPrice: $\{price}\nFuel: \{fuelType}\tTransmission: \{transmissionType}\nKms Driven: \{kmsDriven} km\nUrl: \{imgUrl}\nLocation: \{location}");
 
             FuelType fType;
             if (fuelType.equalsIgnoreCase("gas")) {
@@ -94,7 +133,12 @@ public class SeleniumDriver {
         driver.quit();
     }
 
+    public static List<Car> crawlListCars() {
+        CrawlKijijiAuto();
+        return listCars;
+    }
+
     public static void main(String[] args) {
-        KijijiAuto();
+        CrawlKijijiAuto();
     }
 }

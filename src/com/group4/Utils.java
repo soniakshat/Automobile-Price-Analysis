@@ -1,6 +1,7 @@
 package com.group4;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
@@ -17,6 +18,17 @@ public class Utils {
         Exit,
     }
 
+    public enum SearchType {
+        Name,
+        Fuel,
+        Transmission,
+        Price,
+        ImageAvailable,
+        KmsDriven,
+        Exit,
+    }
+
+    public static final String htmlCacheFolder = ".\\res\\generated\\pages\\";
     public static final String REGEX_DISTANCE_TRAVELLED = "\\d+"; // Matches positive integers
     public static final String REGEX_URL = "((http|https)://)(www.)?[a-zA-Z0-9@:%._\\+~#?&//=]{2,256}\\.[a-z]{2,6}([-a-zA-Z0-9@:%._\\+~#?&//=]*)";
     public static final String REGEX_MODEL_YEAR = "\\d{4}"; // Matches four-digit numbers
@@ -31,6 +43,7 @@ public class Utils {
 
     /**
      * Generates a bag of words from the provided string after cleaning it and making it case in-sensitive
+     *
      * @param data The input raw text
      * @return Bag of Words
      * @author Akshat Soni
@@ -41,6 +54,28 @@ public class Utils {
             return null;
         }
         data = cleanText(data);
+
+        // Creating a words array to store each word from the clean text
+        List<String> words = Arrays.stream(data.split("\\s+")).toList();
+
+        return words;
+    }
+
+    public static List<String> generateBagOfWords(List<Car> carList) {
+        // Returns if the input is null or empty
+        if (carList == null || carList.isEmpty()) {
+            return null;
+        }
+        StringBuilder carData = new StringBuilder();
+
+        for (Car car : carList) {
+            carData.append(STR." \{car.getName()}");
+            carData.append(STR." \{car.getFuelType()}");
+            carData.append(STR." \{car.getKmsDriven()}");
+            carData.append(STR." \{car.getTransmissionType()}");
+        }
+
+        String data = cleanText(carData.toString());
 
         // Creating a words array to store each word from the clean text
         List<String> words = Arrays.stream(data.split("\\s+")).toList();
@@ -75,6 +110,18 @@ public class Utils {
         if (filePath == null || filePath.isEmpty()) {
             return null;
         }
+
+        if (!filePath.endsWith(".txt")) {
+            CustomPrint.printError("Read File for Text", STR."Provided File is not a txt file!\n\{filePath}");
+        }
+
+        File file = new File(filePath);
+
+        if (!file.exists()) {
+            CustomPrint.printError("Read File for Text", "File does not exist");
+            return "";
+        }
+
         StringBuilder content = new StringBuilder();
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
@@ -94,7 +141,7 @@ public class Utils {
      * @param url Url to check if it's valid
      * @return true if it's valid url and false if non valid url
      * @author Akshat Soni
-     * */
+     */
     public static boolean isUrlValid(String url) {
         return Pattern.matches(Utils.REGEX_URL, url);
     }
