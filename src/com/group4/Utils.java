@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class Utils {
     public enum Task {
@@ -88,4 +89,14 @@ public class Utils {
 
         return content.toString();
     }
+
+    /**
+     * @param url Url to check if it's valid
+     * @return true if it's valid url and false if non valid url
+     * @author Akshat Soni
+     * */
+    public static boolean isUrlValid(String url) {
+        return Pattern.matches(Utils.REGEX_URL, url);
+    }
 }
+

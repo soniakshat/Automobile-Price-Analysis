@@ -7,6 +7,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="jsoup" level="project" />
+    <orderEntry type="library" name="jsoup" level="application" />
+    <orderEntry type="library" name="seleniumhq.selenium.api" level="application" />
+    <orderEntry type="library" name="seleniumhq.selenium.chrome.driver" level="application" />
+    <orderEntry type="library" name="seleniumhq.selenium.support" level="application" />
   </component>
 </module>

@@ -9,7 +9,6 @@ import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 /**
  * Main class that will run everything
@@ -27,7 +26,7 @@ public class Driver {
     }
 
     private static void advanceIntegration() {
-        String exit = null;
+        String exit;
         do{
             CustomPrint.println("=".repeat(30));
             CustomPrint.println("Instructions", """
@@ -99,10 +98,6 @@ public class Driver {
         } while (choice != Utils.Task.Exit);
     }
 
-    private static boolean isUrlValid(String url) {
-        return Pattern.matches(Utils.REGEX_URL, url);
-    }
-
     private static Utils.Task askForChoice() {
         CustomPrint.println("Select a search engine feature listed below.");
         CustomPrint.println("---------------------------------------------\n");
@@ -130,7 +125,7 @@ public class Driver {
     public static void deleteAllFilesInFolder(String folderPath) {
         Path folder = Paths.get(folderPath);
         if (!Files.exists(folder) || !Files.isDirectory(folder)) {
-            CustomPrint.printError("Invalid folder path: " + folderPath);
+            CustomPrint.printError(STR."Invalid folder path: \{folderPath}");
             return;
         }
 
@@ -141,12 +136,12 @@ public class Driver {
                         try {
                             Files.deleteIfExists(path);
                         } catch (IOException e) {
-                            CustomPrint.printError(("Error deleting file " + path.toString() + ": " + e.getMessage()));
+                            CustomPrint.printError((STR."Error deleting file \{path.toString()}: \{e.getMessage()}"));
                         }
                     });
-            CustomPrint.println("All files in the folder " + folderPath + " have been deleted.");
+            CustomPrint.println(STR."All files in the folder \{folderPath} have been deleted.");
         } catch (IOException e) {
-            CustomPrint.printError(("Error deleting files in the folder " + folderPath + ": " + e.getMessage()));
+            CustomPrint.printError((STR."Error deleting files in the folder \{folderPath}: \{e.getMessage()}"));
         }
     }
 }
