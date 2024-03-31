@@ -10,14 +10,13 @@ import java.util.*;
 
 /**
  * Main class that will run everything1
- *
  * @author Akshat Soni
  */
 public class Driver {
     private static final String[] urls = {"https://www.motorcitychrysler.ca/used/",
             "https://www.carpages.ca/ontario/windsor/used-cars/",
             "https://www.nawabmotors.ca/cars"};
-    private static final Set<String> bagOfWords = new HashSet<>();
+    public static final Set<String> bagOfWords = new HashSet<>();
     private static final List<Car> listCars = new ArrayList<>();
 
     public static void main(String[] args) {
@@ -25,6 +24,9 @@ public class Driver {
         advanceIntegration();
     }
 
+    /**
+     * method that integrates all the functionality of the program
+     * @author Akshat Soni*/
     private static void advanceIntegration() {
 
         CustomPrint.println("=".repeat(30));
@@ -32,15 +34,14 @@ public class Driver {
         CustomPrint.println("Instructions", """
                 This program will give you information about a car by crawling below mentioned websites.""");
 
-        for (String url : urls) {
-            CustomPrint.println("Source", url);
-        }
 
         CustomPrint.println("=".repeat(30));
 
         listCars.addAll(SeleniumDriver.crawlListCars());
 
         bagOfWords.addAll(Utils.generateBagOfWords(listCars));
+
+        WordCompletion.insertWordsForCompletion(bagOfWords);
 
         Utils.SearchType choice;
         do {
@@ -50,6 +51,23 @@ public class Driver {
                 case Name -> {
                     CustomPrint.print("Enter a car name to search: ");
                     String carName = new Scanner(System.in).nextLine().toLowerCase();
+                    String suggestedCarName = SpellChecking.checkSpelling(carName);
+
+                    if (!suggestedCarName.equalsIgnoreCase(carName)) {
+                        CustomPrint.print("Do you want to search for suggested name? [y/n]:  ");
+                        String c = "";
+                        c = new Scanner(System.in).next();
+                        if (c.equalsIgnoreCase("y")) {
+                            getCarByName(suggestedCarName);
+                            break;
+                        } else if (c.equalsIgnoreCase("n")) {
+                            getCarByName(carName);
+                            break;
+                        } else {
+                            CustomPrint.printError("Spell Mistake Found", "Invalid Choice!");
+                            break;
+                        }
+                    }
                     getCarByName(carName);
                 }
                 case Fuel -> {
@@ -185,14 +203,38 @@ public class Driver {
         List<Car> listRequiredCars = new ArrayList<>();
         for (Car car : listCars) {
             String name = car.getName().toLowerCase();
-            if (name.isBlank() || !name.contains(searchName)) {
-                continue;
-            } else {
+            List<String> breakdownName = Utils.generateBagOfWords(name);
+
+            if (!breakdownName.isEmpty() && breakdownName.contains(searchName)) {
                 listRequiredCars.add(car);
             }
         }
         for (Car car : listRequiredCars) {
             CustomPrint.println(car);
+        }
+
+        if (listRequiredCars.isEmpty()) {
+            List<String> listCompletedWords = WordCompletion.completionSuggestions(searchName);
+            if (!listCompletedWords.isEmpty()) {
+                CustomPrint.println("Do you want to search again? [y/n]");
+                String c = new Scanner(System.in).next();
+                if (c.equalsIgnoreCase("y")) {
+                    CustomPrint.print("Enter a name from the provided suggestions: ");
+                    String newName = new Scanner(System.in).next();
+                    if (listCompletedWords.contains(newName)) {
+                        getCarByName(newName);
+                    }
+                    else {
+                        CustomPrint.printError("Invalid Selection.");
+                    }
+                } else if (c.equalsIgnoreCase("n")) {
+                    return;
+                } else {
+                    CustomPrint.printError("Suggested Name", "Invalid Choice!");
+                }
+            } else {
+                CustomPrint.printError("Search Car By Name", "No car found...");
+            }
         }
     }
 
@@ -207,8 +249,7 @@ public class Driver {
             }
         }
         for (Car car : listRequiredCars) {
-            CustomPrint.println("Car Details", "");
-            CustomPrint.println(STR."Name: \{car.getName()}\tPrice: \{car.getPrice()}\nImage: \{car.getImageUrl()}5");
+            CustomPrint.println(car);
         }
     }
 

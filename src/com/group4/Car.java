@@ -1,5 +1,7 @@
 package com.group4;
 
+import org.json.JSONObject;
+
 enum FuelType {
     Gas, Diesel, Electric, Hybrid, Other
 }
@@ -54,6 +56,22 @@ public class Car {
         CustomPrint.println(this);
     }
 
+    public JSONObject getJsonObject() {
+
+            JSONObject carObject = new JSONObject();
+
+            carObject.put("name", name);
+            carObject.put("price", price);
+            carObject.put("kms", kmsDriven);
+            carObject.put("image", imageUrl == null || imageUrl.isEmpty() ? " ": imageUrl);
+            carObject.put("fuelType", fuelType);
+            carObject.put("transmission", transmissionType);
+
+            CustomPrint.printError("JsonObject", carObject.toString());
+
+            return carObject;
+    }
+
     @Override
     public String toString() {
         StringBuilder data = new StringBuilder();
@@ -68,7 +86,6 @@ public class Car {
         if (imageUrl != null && !imageUrl.isBlank()) {
             data.append(STR."\nImage Url: \{imageUrl}");
         }
-
         return data.toString();
     }
 }

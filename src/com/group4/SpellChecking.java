@@ -5,14 +5,14 @@ import java.util.Scanner;
 import java.util.Set;
 
 public class SpellChecking {
-    private static final Set<String> dictionary = new HashSet<>();
+//    private static final Set<String> dictionary = new HashSet<>();
 
     // Method to find the closest word in the dictionary using edit distance
     public static String findClosestWord(String word) {
         int minDistance = 4;
         String closestWord = null;
 
-        for (String dictWord : dictionary) {
+        for (String dictWord : Driver.bagOfWords) {
             int distance = editDistance(word, dictWord);
             if (distance < minDistance) {
                 minDistance = distance;
@@ -47,18 +47,18 @@ public class SpellChecking {
     }
 
     public static void main(String[] args) {
-        dictionary.add("consider");
-        dictionary.add("minute");
-        dictionary.add("accord");
-        dictionary.add("evident");
-        dictionary.add("practice");
-        dictionary.add("intend");
-        dictionary.add("concern");
-        dictionary.add("commit");
-        dictionary.add("establish");
-        dictionary.add("approach");
-        dictionary.add("obtain");
-        dictionary.add("abstain");
+        Driver.bagOfWords.add("consider");
+        Driver.bagOfWords.add("minute");
+        Driver.bagOfWords.add("accord");
+        Driver.bagOfWords.add("evident");
+        Driver.bagOfWords.add("practice");
+        Driver.bagOfWords.add("intend");
+        Driver.bagOfWords.add("concern");
+        Driver.bagOfWords.add("commit");
+        Driver.bagOfWords.add("establish");
+        Driver.bagOfWords.add("approach");
+        Driver.bagOfWords.add("obtain");
+        Driver.bagOfWords.add("abstain");
 
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter a word for spell check: ");
@@ -67,14 +67,17 @@ public class SpellChecking {
         scanner.close();
     }
 
-    public static void checkSpelling(String inputWord) {
-        if (!dictionary.contains(inputWord)) {
+    public static String checkSpelling(String inputWord) {
+        if (!Driver.bagOfWords.contains(inputWord)) {
             String closestWord = findClosestWord(inputWord);
             if (closestWord != null) {
                 CustomPrint.println("SpellChecker", STR."Did you mean: \{closestWord}?");
+                return closestWord;
             } else {
                 CustomPrint.printError("Spell Checker", "No alternative word suggestion found.");
+                return inputWord;
             }
         }
+        return inputWord;
     }
 }

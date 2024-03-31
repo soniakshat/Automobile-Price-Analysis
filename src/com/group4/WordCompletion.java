@@ -83,27 +83,35 @@ class Trie {
 public class WordCompletion {
     private static final Trie trie = new Trie();
 
+    public static void insertWordsForCompletion(Set<String> bagOfWords){
+        trie.insertAll(Driver.bagOfWords.stream().toList());
+    }
+
     public static void main(String[] args) {
         // Example usage
         // Inserting some sample automobile data into the trie
-        trie.insert("Toyota Camry");
-        trie.insert("Toyota Corolla");
-        trie.insert("Toyota Highlander");
-        trie.insert("Honda Civic");
-        trie.insert("Honda Accord");
-        trie.insert("Ford Mustang");
 
+        Driver.bagOfWords.add("Toyota Camry");
+        Driver.bagOfWords.add("Toyota Corolla");
+        Driver.bagOfWords.add("Toyota Highlander");
+        Driver.bagOfWords.add("Honda Civic");
+        Driver.bagOfWords.add("Honda Accord");
+        Driver.bagOfWords.add("Ford Mustang");
+
+        trie.insertAll(Driver.bagOfWords.stream().toList());
         completionSuggestions("Hon");
     }
 
-    public static void completionSuggestions(String incompleteWord) {
+    public static List<String> completionSuggestions(String incompleteWord) {
         List<String> suggestionList = trie.findWordsWithPrefix(incompleteWord);
         if (!suggestionList.isEmpty()) {
-            CustomPrint.print("AutoComplete", "Suggested auto completed words are: ");
-            for (String word : suggestionList) {
-                CustomPrint.print(STR."\{word}, ");
-            }
+            CustomPrint.print("AutoComplete", "It seems that the input word is incomplete.\nDid you mean anyone of the following: ");
+//            for (String word : suggestionList) {
+//                CustomPrint.print(STR."\{word}, ");
+//            }
+            CustomPrint.println(suggestionList);
         }
+        return suggestionList;
     }
 }
 

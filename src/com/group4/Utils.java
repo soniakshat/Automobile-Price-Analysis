@@ -4,6 +4,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -29,6 +33,7 @@ public class Utils {
     }
 
     public static final String htmlCacheFolder = ".\\res\\generated\\pages\\";
+    public static final String jsonCacheFolder = ".\\res\\generated\\json\\";
     public static final String REGEX_DISTANCE_TRAVELLED = "\\d+"; // Matches positive integers
     public static final String REGEX_URL = "((http|https)://)(www.)?[a-zA-Z0-9@:%._\\+~#?&//=]{2,256}\\.[a-z]{2,6}([-a-zA-Z0-9@:%._\\+~#?&//=]*)";
     public static final String REGEX_MODEL_YEAR = "\\d{4}"; // Matches four-digit numbers
@@ -144,6 +149,30 @@ public class Utils {
      */
     public static boolean isUrlValid(String url) {
         return Pattern.matches(Utils.REGEX_URL, url);
+    }
+
+    public static boolean createDirectoryIfNotExist(String path) {
+        Path dirPath = Paths.get(path);
+        if (!Files.exists(dirPath)) {
+            try {
+                Files.createDirectory(dirPath);
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        return false;
+    }
+
+    public static String readJsonFile(String path) {
+        String jsonData = "";
+        try {
+            jsonData = Files.readString(Paths.get(path), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return jsonData;
     }
 }
 

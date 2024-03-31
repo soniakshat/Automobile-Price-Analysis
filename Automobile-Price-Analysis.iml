@@ -11,5 +11,6 @@
     <orderEntry type="library" name="seleniumhq.selenium.api" level="application" />
     <orderEntry type="library" name="seleniumhq.selenium.chrome.driver" level="application" />
     <orderEntry type="library" name="seleniumhq.selenium.support" level="application" />
+    <orderEntry type="library" name="json" level="application" />
   </component>
 </module>
