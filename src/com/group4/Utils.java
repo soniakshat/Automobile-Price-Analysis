@@ -29,6 +29,7 @@ public class Utils {
         Price,
         ImageAvailable,
         KmsDriven,
+        Stats,
         Exit,
     }
 

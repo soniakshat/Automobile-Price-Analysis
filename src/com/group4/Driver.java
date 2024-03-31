@@ -10,6 +10,7 @@ import java.util.*;
 
 /**
  * Main class that will run everything1
+ *
  * @author Akshat Soni
  */
 public class Driver {
@@ -19,6 +20,10 @@ public class Driver {
     public static final Set<String> bagOfWords = new HashSet<>();
     private static final List<Car> listCars = new ArrayList<>();
 
+    private static final SearchFrequency trackNameSearch = new SearchFrequency();
+    private static final SearchFrequency trackFuelSearch = new SearchFrequency();
+    private static final SearchFrequency trackTransmissionSearch = new SearchFrequency();
+
     public static void main(String[] args) {
 //        basicIntegration();
         advanceIntegration();
@@ -26,7 +31,9 @@ public class Driver {
 
     /**
      * method that integrates all the functionality of the program
-     * @author Akshat Soni*/
+     *
+     * @author Akshat Soni
+     */
     private static void advanceIntegration() {
 
         CustomPrint.println("=".repeat(30));
@@ -53,15 +60,18 @@ public class Driver {
                     String carName = new Scanner(System.in).nextLine().toLowerCase();
                     String suggestedCarName = SpellChecking.checkSpelling(carName);
 
+
                     if (!suggestedCarName.equalsIgnoreCase(carName)) {
                         CustomPrint.print("Do you want to search for suggested name? [y/n]:  ");
                         String c = "";
                         c = new Scanner(System.in).next();
                         if (c.equalsIgnoreCase("y")) {
                             getCarByName(suggestedCarName);
+                            trackNameSearch.trackSearch(suggestedCarName);
                             break;
                         } else if (c.equalsIgnoreCase("n")) {
                             getCarByName(carName);
+                            trackNameSearch.trackSearch(carName);
                             break;
                         } else {
                             CustomPrint.printError("Spell Mistake Found", "Invalid Choice!");
@@ -69,6 +79,7 @@ public class Driver {
                         }
                     }
                     getCarByName(carName);
+                    trackNameSearch.trackSearch(carName);
                 }
                 case Fuel -> {
                     CustomPrint.println("Select a fuel type from below: ");
@@ -79,6 +90,7 @@ public class Driver {
                     int selectionFuelType = new Scanner(System.in).nextInt();
 
                     getCarByFuelType(selectionFuelType);
+                    trackFuelSearch.trackSearch(String.valueOf(selectionFuelType));
                 }
                 case Transmission -> {
                     CustomPrint.println("Select a transmission type from below: ");
@@ -89,6 +101,7 @@ public class Driver {
                     int selectionTransmissionType = new Scanner(System.in).nextInt();
 
                     getCarByTransmission(selectionTransmissionType);
+                    trackTransmissionSearch.trackSearch(String.valueOf(selectionTransmissionType));
                 }
                 case Price -> {
                     CustomPrint.println("Provide a price range for search.");
@@ -120,6 +133,15 @@ public class Driver {
                 }
                 case ImageAvailable -> {
                     getCarsByImage();
+                }
+                case Stats -> {
+                    CustomPrint.println("Search Stats");
+                    CustomPrint.println("Search By Name");
+                    trackNameSearch.displaySearchFrequency();
+                    CustomPrint.println("Search By Fuel");
+                    trackFuelSearch.displaySearchFrequency();
+                    CustomPrint.println("Search By Transmission");
+                    trackTransmissionSearch.displaySearchFrequency();
                 }
                 case Exit -> {
                     CustomPrint.println("Exiting program...");
@@ -223,8 +245,7 @@ public class Driver {
                     String newName = new Scanner(System.in).next();
                     if (listCompletedWords.contains(newName)) {
                         getCarByName(newName);
-                    }
-                    else {
+                    } else {
                         CustomPrint.printError("Invalid Selection.");
                     }
                 } else if (c.equalsIgnoreCase("n")) {
@@ -341,7 +362,8 @@ public class Driver {
         CustomPrint.println("3. Search by transmission");
         CustomPrint.println("4. Search by fuel");
         CustomPrint.println("5. Search by image available");
-        CustomPrint.println("6. Exit from program\n");
+        CustomPrint.println("6. Show search stats");
+        CustomPrint.println("7. Exit from program\n");
 
         CustomPrint.println("Please enter your choice");
 
