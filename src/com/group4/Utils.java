@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class Utils {
+    public static String[] CrawlUrls = {"https://www.motorcitychrysler.ca/used/", "https://www.kijijiautos.ca/cars/#od=down&sb=rel", "https://www.dashmotors.ca/inventory"};;
+
     public enum SearchType {
         Name,
         Fuel,
@@ -223,7 +225,7 @@ public class Utils {
      * @author Akshat Soni
      * */
     public static void createJsonFile(String fileName, JSONArray jsonArray) {
-        File file = new File(jsonCacheFolderPath + fileName);
+        File file = new File(jsonCacheFolder + fileName);
         try (FileWriter fileWriter = new FileWriter(file)) {
             File jsonFolder = new File(Utils.jsonCacheFolder);
 
@@ -267,6 +269,31 @@ public class Utils {
             carList.add(new Car(name, price, fuelType, transmissionType, kms, imgUrl));
         }
         return carList;
+    }
+
+    public static void delay(int milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String readHtmlFile(String filePath) {
+        File htmlFile = new File(filePath);
+        StringBuilder htmlContent = new StringBuilder();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(htmlFile))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                htmlContent.append(line);
+                htmlContent.append(System.lineSeparator());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return htmlContent.toString();
     }
 }
 

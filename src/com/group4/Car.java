@@ -7,7 +7,7 @@ enum FuelType {
 }
 
 enum TransmissionType {
-    Automatic, NA, Manual
+    Automatic, Manual, NA
 }
 
 /**

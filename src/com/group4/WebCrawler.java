@@ -17,48 +17,49 @@ import org.jsoup.nodes.Document;
  * @author Haseeb Shams
  */
 public class WebCrawler {
-    private static final String[] urls = {"https://www.motorcitychrysler.ca/used/", "https://www.kijijiautos.ca/cars/#od=down&sb=rel", "https://www.dashmotors.ca/inventory"};
+    static final String htmlCacheFolderPath = Utils.htmlCacheFolder;
 
     public void main(String[] args) {
-        CrawlWebsites(urls);
+        CrawlWebsites();
     }
 
-    public static List<String> CrawlWebsites(String[] urls) {
+    public static List<String> CrawlWebsites() {
         List<String> filePaths = new ArrayList<>();
-        for (String url : urls) {
+        for (String url : Utils.CrawlUrls) {
             filePaths.add(fetchAndSaveHtml(url));
         }
         return filePaths;
     }
 
     private static String fetchAndSaveHtml(String url) {
-        String folderPath = Utils.htmlCacheFolder;
-
         String webSiteName = url.replaceAll(".*www\\.(.*?)\\..*", "$1");
-        String fileName = STR."Cache_\{webSiteName}.txt";
 
-        if (new File(folderPath + fileName).exists()) {
-            CustomPrint.println("Crawler", STR."File Cache Exists :: \{fileName}");
-            return folderPath + fileName;
+        String htmlFileName = STR."Cache_\{webSiteName}.html";
+
+        String htmlFilePath = htmlCacheFolderPath + htmlFileName;
+
+
+        if (new File(htmlCacheFolderPath + htmlFileName).exists()) {
+            CustomPrint.println("Crawler", STR."File Cache Exists :: \{htmlFileName}");
+            return htmlCacheFolderPath + htmlFileName;
         } else {
             try {
                 Document document = Jsoup.connect(url).get();
                 String htmlCode = document.html();
 
-                File webPageFolder = new File(folderPath);
+                File webPageFolder = new File(htmlCacheFolderPath);
 
                 if (!webPageFolder.exists()) {
-                    Files.createDirectories(Paths.get(folderPath));
+                    Files.createDirectories(Paths.get(htmlCacheFolderPath));
                 }
 
                 if (webPageFolder.exists() && webPageFolder.isDirectory()) {
-                    try (FileWriter writer = new FileWriter(folderPath + fileName)) {
+                    try (FileWriter writer = new FileWriter(htmlCacheFolderPath + htmlFileName)) {
                         writer.write(htmlCode);
                     }
-                    CustomPrint.println("Crawler", STR."Crawled File Saved: \{fileName}");
-                    return folderPath + fileName;
-                }
-                else{
+                    CustomPrint.println("Crawler", STR."Crawled File Saved: \{htmlFileName}");
+                    return htmlCacheFolderPath + htmlFileName;
+                } else {
                     return null;
                 }
 

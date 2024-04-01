@@ -3,7 +3,6 @@ package com.group4;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -32,8 +31,10 @@ public class InvertedIndexing {
                     invertedIndex.computeIfAbsent(word.toLowerCase(), k -> new HashSet<>()).add(i);
                 }
             }
-        } catch (IOException | ParseException e) {
+        } catch (IOException e) {
             e.printStackTrace();
+        } catch (org.json.simple.parser.ParseException e) {
+            throw new RuntimeException(e);
         }
     }
 
