@@ -2,23 +2,29 @@ package com.group4;
 
 import static java.lang.StringTemplate.STR;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
  * Main class that will run everything1
+ *
  * @author Akshat Soni
  */
 public class Driver {
-    private static final String[] urls = {"https://www.motorcitychrysler.ca/used/", "https://www.kijijiautos.ca/cars/#od=down&sb=rel", "https://www.dashmotors.ca/inventory"};
+    private static final String[] urls = {"https://www.motorcitychrysler.ca/used/",
+            "https://www.carpages.ca/ontario/windsor/used-cars/",
+            "https://www.nawabmotors.ca/cars"};
     public static final Set<String> bagOfWords = new HashSet<>();
     private static final List<Car> listCars = new ArrayList<>();
+
     private static final SearchFrequency trackNameSearch = new SearchFrequency();
     private static final SearchFrequency trackFuelSearch = new SearchFrequency();
     private static final SearchFrequency trackTransmissionSearch = new SearchFrequency();
 
     public static void main(String[] args) {
-        Utils.createDirectoryIfNotExist(Utils.htmlCacheFolder);
-        Utils.createDirectoryIfNotExist(Utils.jsonCacheFolder);
 //        basicIntegration();
         advanceIntegration();
     }
@@ -33,31 +39,13 @@ public class Driver {
         CustomPrint.println("=".repeat(30));
 
         CustomPrint.println("Instructions", """
-                This program will give you information about a car by crawling below mentioned websites.
-                                                 _________
-                                          _.--""'-----,   `"--.._
-                                       .-''   _/_      ; .'"----,`-,
-                                     .'      :___:     ; :      ;;`.`.
-                                    .      _.- _.-    .' :      ::  `..
-                                 __;..----------------' :: ___  ::   ;;
-                            .--"". '           ___.....`:=(___)-' :--'`.
-                          .'   .'         .--''__       :       ==:    ;
-                      .--/    /        .'.''     ``-,   :         :   '`-.
-                   ."', :    /       .'-`\\\\       .--.\\ :         :  ,   _\\
-                  ;   ; |   ;       /:'  ;;      /__  \\\\:         :  :  /_\\\\
-                  |\\_/  |   |      / \\__//      /"--\\\\ \\:         :  : ;|`\\|   \s
-                  : "  /\\__/\\____//   ""\"      /     \\\\ :         :  : :|'||
-                [""\"""\"""\"--------........._  /      || ;      __.:--' :|//|
-                 "------....______         ].'|      // |--""\"'__...-'`\\ \\//
-                   `| ACC-Project |__;_...--'": :  \\    //  |---""\"      \\__\\_/
-                     ""\"""\"""\"'            \\ \\  \\_.//  /
-                       `---'                \\ \\_     _'
-                                             `--`---'  dp""");
+                This program will give you information about a car by crawling below mentioned websites.""");
 
 
         CustomPrint.println("=".repeat(30));
 
         listCars.addAll(SeleniumDriver.crawlListCars());
+
         bagOfWords.addAll(Utils.generateBagOfWords(listCars));
 
         WordCompletion.insertWordsForCompletion(bagOfWords);
@@ -147,28 +135,12 @@ public class Driver {
                 }
                 case Stats -> {
                     CustomPrint.println("Search Stats");
-                    if (trackNameSearch.isResultAvailable()) {
-                        CustomPrint.println("Search By Name");
-                        trackNameSearch.displayTopKSearch(3);
-                    }
-                    if (trackFuelSearch.isResultAvailable()) {
-                        CustomPrint.println("Search By Fuel");
-                        trackFuelSearch.displayTopKSearch(3);
-                    }
-                    if (trackTransmissionSearch.isResultAvailable()) {
-                        CustomPrint.println("Search By Transmission");
-                        trackTransmissionSearch.displayTopKSearch(3);
-                    }
-                }
-                case DeleteCacheAndRefreshData -> {
-                    CustomPrint.println("Deleting Cache...");
-                    Utils.deleteAllFilesInFolder(Utils.jsonCacheFolder);
-                    Utils.deleteAllFilesInFolder(Utils.htmlCacheFolder);
-                    listCars.clear();
-                    bagOfWords.clear();
-                    CustomPrint.println("Regathering data...");
-                    listCars.addAll(SeleniumDriver.crawlListCars());
-                    bagOfWords.addAll(Utils.generateBagOfWords(listCars));
+                    CustomPrint.println("Search By Name");
+                    trackNameSearch.displayTopKSearch(3);
+//                    CustomPrint.println("Search By Fuel");
+//                    trackFuelSearch.displaySearchFrequency();
+//                    CustomPrint.println("Search By Transmission");
+//                    trackTransmissionSearch.displaySearchFrequency();
                 }
                 case Exit -> {
                     CustomPrint.println("Exiting program...");
@@ -180,16 +152,13 @@ public class Driver {
         } while (choice != Utils.SearchType.Exit);
     }
 
-    /**
-     * get cars from the provided range of kms
-     * @param minKms min kms
-     * @param maxKms max kms
-     * @author Akshat Soni*/
     private static void getCarsByKms(int minKms, int maxKms) {
         List<Car> listRequiredCars = new ArrayList<>();
         for (Car car : listCars) {
             int carKmsDriven = car.getKmsDriven();
-            if (carKmsDriven > 0 && (carKmsDriven >= minKms && carKmsDriven <= maxKms)) {
+            if (carKmsDriven <= 0 || !(carKmsDriven >= minKms && carKmsDriven <= maxKms)) {
+                continue;
+            } else {
                 listRequiredCars.add(car);
             }
         }
@@ -200,19 +169,16 @@ public class Driver {
         for (Car car : listRequiredCars) {
             CustomPrint.println(car);
         }
+        performJSONProcessingAndRanking("kms", 0, null);
     }
 
-    /**
-     * get cars from the provided range of price
-     * @param minPrice min price
-     * @param maxPrice max price
-     * @author Akshat Soni
-     * */
     private static void getCarByPrice(int minPrice, int maxPrice) {
         List<Car> listRequiredCars = new ArrayList<>();
         for (Car car : listCars) {
             int carPrice = car.getPrice();
-            if (carPrice > 0 && (carPrice >= minPrice && carPrice <= maxPrice)) {
+            if (carPrice <= 0 || !(carPrice >= minPrice && carPrice <= maxPrice)) {
+                continue;
+            } else {
                 listRequiredCars.add(car);
             }
         }
@@ -223,49 +189,41 @@ public class Driver {
         for (Car car : listRequiredCars) {
             CustomPrint.println(car);
         }
+        performJSONProcessingAndRanking("price", minPrice, String.valueOf(maxPrice));
     }
 
-    /**
-     * get cars from the provided transmission type
-     * @param selectionTransmissionType transmission type
-     * @author Akshat Soni
-     * */
     private static void getCarByTransmission(int selectionTransmissionType) {
         List<Car> listRequiredCars = new ArrayList<>();
         for (Car car : listCars) {
             TransmissionType carTransmissionType = car.getTransmissionType();
-            if (carTransmissionType == TransmissionType.values()[selectionTransmissionType - 1]) {
+            if (carTransmissionType != TransmissionType.values()[selectionTransmissionType - 1]) {
+                continue;
+            } else {
                 listRequiredCars.add(car);
             }
         }
         for (Car car : listRequiredCars) {
             CustomPrint.println(car);
         }
+        performJSONProcessingAndRanking("transmission", selectionTransmissionType, null);
     }
 
-    /**
-     * get cars from the provided fuel type
-     * @param selectionFuelType fuel type
-     * @author Akshat Soni
-     * */
     private static void getCarByFuelType(int selectionFuelType) {
         List<Car> listRequiredCars = new ArrayList<>();
         for (Car car : listCars) {
             FuelType carFuelType = car.getFuelType();
-            if (carFuelType == FuelType.values()[selectionFuelType - 1]) {
+            if (carFuelType != FuelType.values()[selectionFuelType - 1]) {
+                continue;
+            } else {
                 listRequiredCars.add(car);
             }
         }
         for (Car car : listRequiredCars) {
             CustomPrint.println(car);
         }
+        performJSONProcessingAndRanking("fuelType", selectionFuelType, null);
     }
 
-    /**
-     * get cars by their name
-     * @param searchName name of car
-     * @author Akshat Soni
-     * */
     private static void getCarByName(String searchName) {
         List<Car> listRequiredCars = new ArrayList<>();
         for (Car car : listCars) {
@@ -282,12 +240,8 @@ public class Driver {
 
         if (listRequiredCars.isEmpty()) {
             List<String> listCompletedWords = WordCompletion.completionSuggestions(searchName);
-
             if (!listCompletedWords.isEmpty()) {
-                CustomPrint.print("AutoComplete", "It seems that the input word is incomplete.\nDid you mean anyone of the following: ");
-                CustomPrint.println(listCompletedWords);
-
-                CustomPrint.print("Do you want to search again? [y/n]");
+                CustomPrint.println("Do you want to search again? [y/n]");
                 String c = new Scanner(System.in).next();
                 if (c.equalsIgnoreCase("y")) {
                     CustomPrint.print("Enter a name from the provided suggestions: ");
@@ -306,29 +260,153 @@ public class Driver {
                 CustomPrint.printError("Search Car By Name", "No car found...");
             }
         }
+        performJSONProcessingAndRanking("name", 0, searchName);
     }
 
-    /**
-     * get cars which has their image available
-     * @author Akshat Soni
-     * */
     private static void getCarsByImage() {
         List<Car> listRequiredCars = new ArrayList<>();
         for (Car car : listCars) {
             String imageUrl = car.getImageUrl();
-            if (imageUrl != null && !imageUrl.isBlank()) {
+            if (imageUrl == null || imageUrl.isBlank()) {
+                continue;
+            } else {
                 listRequiredCars.add(car);
             }
         }
         for (Car car : listRequiredCars) {
             CustomPrint.println(car);
         }
+        performJSONProcessingAndRanking("image", 0, null);
     }
 
-    /**
-     * provides the selected search type
-     * @author Akshat Soni
-     * */
+    private static void performJSONProcessingAndRanking(String searchMethod, int intValueParam, String strValueParam) {
+//        InvertedIndexing invertedIndexing = new InvertedIndexing();
+//        invertedIndexing.buildIndex(".\\res\\generated\\json\\kijijiautos.json");
+
+        PageRanking pageRanking = new PageRanking();
+        pageRanking.readPages(".\\res\\generated\\json\\kijijiautos.json");
+
+        // Example usage of inverted index
+//        Map<String, Set<Integer>> invertedIndex = invertedIndexing.getInvertedIndex();
+//        System.out.println("Inverted Index:");
+//        for (Map.Entry<String, Set<Integer>> entry : invertedIndex.entrySet()) {
+//            System.out.println(entry.getKey() + ": " + entry.getValue());
+//        }
+
+        // Example usage of page ranking
+        switch (searchMethod) {
+            case "name" -> {
+                System.out.println("\nRanked Pages by Name:");
+                pageRanking.rankByName(strValueParam);
+                pageRanking.printRankedPages();
+            }
+            case "price" -> {
+                System.out.println("\nRanked Pages by Price:");
+                pageRanking.rankByPrice(intValueParam, Integer.parseInt(strValueParam));
+                pageRanking.printRankedPages();
+            }
+            case "kms" -> {
+                System.out.println("\nRanked Pages by Kms Driven:");
+                pageRanking.rankByKmsDriven();
+                pageRanking.printRankedPages();
+            }
+            case "transmission" -> {
+                System.out.println("\nRanked Pages by Transmission:");
+                pageRanking.rankByTransmission(intValueParam);
+                pageRanking.printRankedPages();
+            }
+            case "fuelType" -> {
+                System.out.println("\nRanked Pages by Fuel Type:");
+                pageRanking.rankByFuelType(intValueParam);
+                pageRanking.printRankedPages();
+            }
+            case "image" -> {
+                System.out.println("\nRanked Pages by Image Availability:");
+                pageRanking.rankByImageAvailability();
+                pageRanking.printRankedPages();
+            }
+        }
+    }
+
+//    private static void basicIntegration() {
+//        Utils.Task choice;
+//        do {
+//            choice = askForChoiceBasic();
+//            switch (choice) {
+//                case Utils.Task.CrawlWebsite: {
+//                    CustomPrint.print("URL to be crawled: ");
+//                    for (String u : urls) {
+//                        CustomPrint.print(STR."\{u}, ");
+//                    }
+//                    WebCrawler.CrawlWebsites(urls);
+//                    break;
+//                }
+//
+//                case Utils.Task.DeleteCacheAndReCrawl: {
+//                    deleteAllFilesInFolder(".\\res\\generated\\pages\\");
+//                    WebCrawler.CrawlWebsites(urls);
+//                    break;
+//                }
+//
+//                case Utils.Task.RankPage: {
+//                    CustomPrint.println("Page Ranking - Search word: ");
+//                    String word = new Scanner(System.in).next();
+//                    InvertedIndexing.searchInFile(word);
+//                    break;
+//                }
+//
+//                case Utils.Task.WordSuggestion: {
+//                    CustomPrint.println("Words Suggestion - Search word: ");
+//                    String word = new Scanner(System.in).next();
+//                    SpellChecking.checkSpelling(word);
+//                    break;
+//                }
+//
+//                case Utils.Task.AutoComplete: {
+//                    CustomPrint.println("Auto Complete - Enter word: ");
+//                    String word = new Scanner(System.in).next();
+//                    WordCompletion.completionSuggestions(word);
+//                    break;
+//                }
+//
+//                case Utils.Task.Exit: {
+//                    CustomPrint.println("Exiting program.");
+//                    break;
+//                }
+//
+//                default: {
+//                    CustomPrint.println("Please select a valid choice.");
+//                    break;
+//                }
+//            }
+//        } while (choice != Utils.Task.Exit);
+//    }
+//
+//    private static Utils.Task askForChoiceBasic() {
+//        CustomPrint.println("\n---------------------------------------------");
+//        CustomPrint.println("Select a search engine feature listed below.");
+//        CustomPrint.println("---------------------------------------------\n");
+//        CustomPrint.println("1. Crawl Websites");
+//        CustomPrint.println("2. Delete cache and Re crawl");
+//        CustomPrint.println("3. Rank the web pages according to the occurrence of a word");
+//        CustomPrint.println("4. Words Suggestion");
+//        CustomPrint.println("5. AutoComplete");
+//        CustomPrint.println("6. Exit from program\n");
+//
+//        CustomPrint.println("Please enter your choice");
+//
+//        int choice = new Scanner(System.in).nextInt();
+//
+//        return switch (choice) {
+//            case 1 -> Utils.Task.CrawlWebsite;
+//            case 2 -> Utils.Task.DeleteCacheAndReCrawl;
+//            case 3 -> Utils.Task.RankPage;
+//            case 4 -> Utils.Task.WordSuggestion;
+//            case 5 -> Utils.Task.AutoComplete;
+//            default -> Utils.Task.Exit;
+//        };
+//    }
+
     private static Utils.SearchType askForChoiceAdvance() {
         CustomPrint.println("\n-----------------------");
         CustomPrint.println("Select a search method.");
@@ -339,20 +417,11 @@ public class Driver {
         CustomPrint.println("4. Search by fuel");
         CustomPrint.println("5. Search by image available");
         CustomPrint.println("6. Show search stats");
-        CustomPrint.println("7. Delete cache and refresh data");
-        CustomPrint.println("8. Exit from program\n");
+        CustomPrint.println("7. Exit from program\n");
 
-        Scanner scanner = new Scanner(System.in);
-        int choice = -1;
-        try {
-            CustomPrint.print("Please enter your choice: ");
-            choice = scanner.nextInt();
+        CustomPrint.println("Please enter your choice");
 
-        } catch (InputMismatchException e) {
-            CustomPrint.printError("Search Selection", "Invalid input. Please enter a correct choice:");
-            scanner.next();
-            choice = scanner.nextInt(); // Discard the invalid input and wait for a new input
-        }
+        int choice = new Scanner(System.in).nextInt();
 
         return switch (choice) {
             case 1 -> Utils.SearchType.Name;
@@ -361,8 +430,30 @@ public class Driver {
             case 4 -> Utils.SearchType.Fuel;
             case 5 -> Utils.SearchType.ImageAvailable;
             case 6 -> Utils.SearchType.Stats;
-            case 7 -> Utils.SearchType.DeleteCacheAndRefreshData;
             default -> Utils.SearchType.Exit;
         };
+    }
+
+    public static void deleteAllFilesInFolder(String folderPath) {
+        Path folder = Paths.get(folderPath);
+        if (!Files.exists(folder) || !Files.isDirectory(folder)) {
+            CustomPrint.printError(STR."Invalid folder path: \{folderPath}");
+            return;
+        }
+
+        try {
+            Files.walk(folder)
+                    .filter(Files::isRegularFile)
+                    .forEach(path -> {
+                        try {
+                            Files.deleteIfExists(path);
+                        } catch (IOException e) {
+                            CustomPrint.printError((STR."Error deleting file \{path.toString()}: \{e.getMessage()}"));
+                        }
+                    });
+            CustomPrint.println(STR."All files in the folder \{folderPath} have been deleted.");
+        } catch (IOException e) {
+            CustomPrint.printError((STR."Error deleting files in the folder \{folderPath}: \{e.getMessage()}"));
+        }
     }
 }
