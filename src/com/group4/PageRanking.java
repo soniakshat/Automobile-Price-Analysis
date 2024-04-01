@@ -8,12 +8,16 @@ import org.json.simple.parser.ParseException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class PageRanking {
     private List<Map<String, Object>> pages;
+    private Map<String, Set<Integer>> invertedIndex;
 
     public PageRanking() {
+
         pages = new ArrayList<>();
+        invertedIndex = new HashMap<>();
     }
 
     public void readPages(String filename) {
@@ -47,7 +51,7 @@ public class PageRanking {
                 filteredPages.add(page);
             }
         }
-        Collections.sort(filteredPages, Comparator.comparingInt(p -> Integer.parseInt(p.get("price").toString())));
+        filteredPages.sort(Comparator.comparingInt(p -> Integer.parseInt(p.get("price").toString())));
         pages = filteredPages;
     }
 
@@ -114,5 +118,84 @@ public class PageRanking {
         for (Map<String, Object> page : pages) {
             System.out.println("Name: " + page.get("name") + ", Price: " + page.get("price"));
         }
+    }
+
+    public List<Map<String, Object>> getRankedPages() {
+        return pages;
+    }
+
+    // Build inverted index
+    void buildInvertedIndex() {
+        for (int i = 0; i < pages.size(); i++) {
+            Map<String, Object> page = pages.get(i);
+            String name = page.get("name").toString().toLowerCase();
+            List<String> keywords = Arrays.asList(name.split("\\s+"));
+
+            for (String keyword : keywords) {
+                invertedIndex.putIfAbsent(keyword, new HashSet<>());
+                invertedIndex.get(keyword).add(i);
+            }
+        }
+    }
+
+    // Perform search using inverted index
+    public List<Map<String, Object>> searchByKeyword(String keyword) {
+        if (!invertedIndex.containsKey(keyword.toLowerCase())) {
+            return Collections.emptyList();
+        }
+
+        Set<Integer> indices = invertedIndex.get(keyword.toLowerCase());
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (int index : indices) {
+            result.add(pages.get(index));
+        }
+        return result;
+    }
+
+    public List<Map<String, Object>> getPagesInPriceRange(int minPrice, int maxPrice) {
+        List<Map<String, Object>> filteredPages = new ArrayList<>();
+        for (Map<String, Object> page : pages) {
+            int price = Integer.parseInt(page.get("price").toString());
+            if (price >= minPrice && price <= maxPrice) {
+                filteredPages.add(page);
+            }
+        }
+        return filteredPages;
+    }
+
+    // New method to filter pages within the specified kms range
+    public List<Map<String, Object>> getPagesInKmsRange(int minKms, int maxKms) {
+        List<Map<String, Object>> filteredPages = new ArrayList<>();
+        for (Map<String, Object> page : pages) {
+            int kms = Integer.parseInt(page.get("kms").toString());
+            if (kms >= minKms && kms <= maxKms) {
+                filteredPages.add(page);
+            }
+        }
+        return filteredPages;
+    }
+
+    public List<Map<String, Object>> getPagesByTransmission(int selectionTransmissionType) {
+        String[] transmissionTypes = {"Automatic", "NA", "Manual"};
+        String selectedTransmission = transmissionTypes[selectionTransmissionType - 1];
+
+        return pages.stream()
+                .filter(page -> page.get("transmission").toString().equalsIgnoreCase(selectedTransmission))
+                .collect(Collectors.toList());
+    }
+
+    public List<Map<String, Object>> getPagesByFuelType(int selectionFuelType) {
+        String[] fuelTypes = {"Gas", "Diesel", "Electric", "Hybrid", "Other"};
+        String selectedFuelType = fuelTypes[selectionFuelType - 1];
+
+        return pages.stream()
+                .filter(page -> page.get("fuelType").toString().equalsIgnoreCase(selectedFuelType))
+                .collect(Collectors.toList());
+    }
+
+    public List<Map<String, Object>> getPagesWithImage() {
+        return pages.stream()
+                .filter(page -> page.get("image") != null)
+                .collect(Collectors.toList());
     }
 }

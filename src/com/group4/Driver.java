@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.io.File;
 import java.util.*;
 
 /**
@@ -254,7 +255,7 @@ public class Driver {
         for (Car car : listRequiredCars) {
             CustomPrint.println(car);
         }
-        performJSONProcessingAndRanking("kms", 0, null);
+        performJSONProcessingAndRanking("kms", minKms, String.valueOf(maxKms));
     }
 
     /**
@@ -398,54 +399,75 @@ public class Driver {
         performJSONProcessingAndRanking("image", 0, null);
     }
 
-    private static void performJSONProcessingAndRanking(String searchMethod, int intValueParam, String strValueParam) {
-//        InvertedIndexing invertedIndexing = new InvertedIndexing();
-//        invertedIndexing.buildIndex(".\\res\\generated\\json\\kijijiautos.json");
+    private static void performJSONProcessingAndRanking(String searchMethod, Integer intValueParam, String strValueParam) {
+        List<Map<String, Object>> allRankedPages = new ArrayList<>();
+        File folder = new File("./");
+        File[] files = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".json"));
 
-        PageRanking pageRanking = new PageRanking();
-        pageRanking.readPages(".\\res\\generated\\json\\kijijiautos.json");
+        if (files != null) {
+            for (File file : files) {
+                try {
+                    PageRanking pageRanking = new PageRanking();
+                    pageRanking.readPages(file.getAbsolutePath());
 
-        // Example usage of inverted index
-//        Map<String, Set<Integer>> invertedIndex = invertedIndexing.getInvertedIndex();
-//        System.out.println("Inverted Index:");
-//        for (Map.Entry<String, Set<Integer>> entry : invertedIndex.entrySet()) {
-//            System.out.println(entry.getKey() + ": " + entry.getValue());
-//        }
+                    switch (searchMethod) {
+                        case "name" -> {
+                            pageRanking.rankByName(strValueParam);
+                            pageRanking.buildInvertedIndex();
+                            List<Map<String, Object>> filteredPages = pageRanking.searchByKeyword(strValueParam);
+                            allRankedPages.addAll(filteredPages);
+                        }
+                        case "price" -> {
+                            int minPrice = intValueParam != null ? intValueParam : 0;
+                            int maxPrice = strValueParam != null ? Integer.parseInt(strValueParam) : Integer.MAX_VALUE;
+                            List<Map<String, Object>> filteredPages = pageRanking.getPagesInPriceRange(minPrice, maxPrice);
 
-        // Example usage of page ranking
-        switch (searchMethod) {
-            case "name" -> {
-                System.out.println("\nRanked Pages by Name:");
-                pageRanking.rankByName(strValueParam);
-                pageRanking.printRankedPages();
+                            // Sort filtered pages by price in increasing order
+                            filteredPages.sort(Comparator.comparingInt(p -> Integer.parseInt(p.get("price").toString())));
+
+                            allRankedPages.addAll(filteredPages);
+                        }
+                        case "kms" -> {
+                            int minKms = intValueParam != null ? intValueParam : 0;
+                            int maxKms = strValueParam != null ? Integer.parseInt(strValueParam) : Integer.MAX_VALUE;
+                            List<Map<String, Object>> filteredPages = pageRanking.getPagesInKmsRange(minKms, maxKms);
+                            allRankedPages.addAll(filteredPages);
+                        }
+                        case "transmission" -> {
+                            int selectionTransmissionType = intValueParam != null ? intValueParam : 0;
+                            List<Map<String, Object>> filteredPages = pageRanking.getPagesByTransmission(selectionTransmissionType);
+                            allRankedPages.addAll(filteredPages);
+                        }
+                        case "fuelType" -> {
+                            int selectionFuelType = intValueParam != null ? intValueParam : 0;
+                            List<Map<String, Object>> filteredPages = pageRanking.getPagesByFuelType(selectionFuelType);
+                            allRankedPages.addAll(filteredPages);
+                        }
+                        case "image" -> {
+                            List<Map<String, Object>> filteredPages = pageRanking.getPagesWithImage();
+                            allRankedPages.addAll(filteredPages);
+                        }
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error processing file: " + file.getName());
+                    e.printStackTrace();
+                }
             }
-            case "price" -> {
-                System.out.println("\nRanked Pages by Price:");
-                pageRanking.rankByPrice(intValueParam, Integer.parseInt(strValueParam));
-                pageRanking.printRankedPages();
+
+            // Print all filtered pages together
+            System.out.println("\nFiltered Ranked Pages based on search method \"" + searchMethod + "\" and keyword \"" + strValueParam + "\" or range [" + intValueParam + " - " + strValueParam + "]:\n");
+            for (int i = 0; i < allRankedPages.size(); i++) {
+                Map<String, Object> page = allRankedPages.get(i);
+                System.out.println("Rank: " + (i + 1) + ", Name: " + page.get("name") + ", Price: " + page.get("price"));
             }
-            case "kms" -> {
-                System.out.println("\nRanked Pages by Kms Driven:");
-                pageRanking.rankByKmsDriven();
-                pageRanking.printRankedPages();
-            }
-            case "transmission" -> {
-                System.out.println("\nRanked Pages by Transmission:");
-                pageRanking.rankByTransmission(intValueParam);
-                pageRanking.printRankedPages();
-            }
-            case "fuelType" -> {
-                System.out.println("\nRanked Pages by Fuel Type:");
-                pageRanking.rankByFuelType(intValueParam);
-                pageRanking.printRankedPages();
-            }
-            case "image" -> {
-                System.out.println("\nRanked Pages by Image Availability:");
-                pageRanking.rankByImageAvailability();
-                pageRanking.printRankedPages();
-            }
+        } else {
+            System.out.println("No JSON files found in the directory.");
         }
     }
+
+
+
+
 
     /**
      * provides the selected search type
