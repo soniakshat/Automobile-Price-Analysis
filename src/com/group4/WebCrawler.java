@@ -17,9 +17,7 @@ import org.jsoup.nodes.Document;
  * @author Haseeb Shams
  */
 public class WebCrawler {
-    private static final String[] urls = {"https://www.motorcitychrysler.ca/used/",
-            "https://www.carpages.ca/ontario/windsor/used-cars/",
-            "https://www.nawabmotors.ca/cars"};
+    private static final String[] urls = {"https://www.motorcitychrysler.ca/used/", "https://www.kijijiautos.ca/cars/#od=down&sb=rel", "https://www.dashmotors.ca/inventory"};
 
     public void main(String[] args) {
         CrawlWebsites(urls);
