@@ -60,7 +60,6 @@ public class Driver {
                     String carName = new Scanner(System.in).nextLine().toLowerCase();
                     String suggestedCarName = SpellChecking.checkSpelling(carName);
 
-
                     if (!suggestedCarName.equalsIgnoreCase(carName)) {
                         CustomPrint.print("Do you want to search for suggested name? [y/n]:  ");
                         String c = "";
@@ -137,11 +136,11 @@ public class Driver {
                 case Stats -> {
                     CustomPrint.println("Search Stats");
                     CustomPrint.println("Search By Name");
-                    trackNameSearch.displaySearchFrequency();
-                    CustomPrint.println("Search By Fuel");
-                    trackFuelSearch.displaySearchFrequency();
-                    CustomPrint.println("Search By Transmission");
-                    trackTransmissionSearch.displaySearchFrequency();
+                    trackNameSearch.displayTopKSearch(3);
+//                    CustomPrint.println("Search By Fuel");
+//                    trackFuelSearch.displaySearchFrequency();
+//                    CustomPrint.println("Search By Transmission");
+//                    trackTransmissionSearch.displaySearchFrequency();
                 }
                 case Exit -> {
                     CustomPrint.println("Exiting program...");
@@ -375,6 +374,7 @@ public class Driver {
             case 3 -> Utils.SearchType.Transmission;
             case 4 -> Utils.SearchType.Fuel;
             case 5 -> Utils.SearchType.ImageAvailable;
+            case 6 -> Utils.SearchType.Stats;
             default -> Utils.SearchType.Exit;
         };
     }

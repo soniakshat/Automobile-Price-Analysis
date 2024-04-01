@@ -7,13 +7,14 @@ import java.util.PriorityQueue;
 
 /**
  * Class to count frequency of words in provided text
- *  @author Akshat Soni
- * */
+ *
+ * @author Akshat Soni
+ */
 public class FrequencyCount {
-    private final static Map<String, Integer> wordFrequency = new HashMap<>();
+    private final Map<String, Integer> wordFrequency = new HashMap<>();
 
     // Priority queue maxHeap to maintain the top words
-    private final static PriorityQueue<Map.Entry<String, Integer>> maxHeap = new PriorityQueue<>(
+    private final PriorityQueue<Map.Entry<String, Integer>> maxHeap = new PriorityQueue<>(
             (a, b) -> b.getValue() - a.getValue());
 
     /**
@@ -22,7 +23,9 @@ public class FrequencyCount {
      *
      * @param text The input text to add words from.
      */
-    public static void addWordsToMap(String text) {
+    public void addWordsToMap(String text) {
+        CustomPrint.printError("Word Added: " + text);
+        CustomPrint.print("BOW: " + Utils.generateBagOfWords(text));
         addWordsToMap(Utils.generateBagOfWords(text));
     }
 
@@ -32,7 +35,7 @@ public class FrequencyCount {
      *
      * @param words The list of words to add.
      */
-    public static void addWordsToMap(List<String> words) {
+    public void addWordsToMap(List<String> words) {
         // Adding each word to the map and incrementing the value by 1
         for (String word : words) {
             wordFrequency.put(word, wordFrequency.getOrDefault(word, 0) + 1);
@@ -48,7 +51,7 @@ public class FrequencyCount {
      *
      * @param text The sentence containing words to be removed.
      */
-    public static void removeWordsFromMap(String text) {
+    public void removeWordsFromMap(String text) {
         removeWordsFromMap(Utils.generateBagOfWords(text));
     }
 
@@ -58,7 +61,7 @@ public class FrequencyCount {
      *
      * @param words The list of words to remove.
      */
-    public static void removeWordsFromMap(List<String> words) {
+    public void removeWordsFromMap(List<String> words) {
         // Decreasing the value by one from the map for each word
         for (String word : words) {
             if (wordFrequency.containsKey(word)) {
@@ -80,7 +83,7 @@ public class FrequencyCount {
     /**
      * Updates the max heap with the current data from the word frequency map.
      */
-    private static void updateMaxHeap() {
+    private void updateMaxHeap() {
         maxHeap.clear();
         maxHeap.addAll(wordFrequency.entrySet());
     }
@@ -88,7 +91,7 @@ public class FrequencyCount {
     /**
      * Cleans the word frequency map by clearing its contents.
      */
-    public static void cleanWordFrequencyMap() {
+    public void cleanWordFrequencyMap() {
         // Clearing the wordFrequency HashMap
         wordFrequency.clear();
         // Clearing the max heap as well
@@ -100,7 +103,7 @@ public class FrequencyCount {
      *
      * @param k The number of top words to print.
      */
-    public static void topKWords(int k) {
+    public void topKWords(int k) {
         if (maxHeap.isEmpty()) {
             CustomPrint.println(STR."Max Heap is empty. Cannot get top \{k} words.");
             return;
@@ -110,7 +113,7 @@ public class FrequencyCount {
         CustomPrint.println(STR."Top \{k} words and their frequencies:");
         for (int i = 0; i < k; i++) {
             if (maxHeap.isEmpty()) {
-                CustomPrint.println(STR."Wanted \{k}, but there are only \{i} unique words in the text file.");
+//                CustomPrint.println(STR."Wanted \{k}, but there are only \{i} unique words in the text file.");
                 return;
             }
             Map.Entry<String, Integer> topEntry = maxHeap.poll();
@@ -119,39 +122,40 @@ public class FrequencyCount {
     }
 
     public static void main(String[] args) {
+        FrequencyCount frequencyCount = new FrequencyCount();
         int k = 5;
         String filePath = ".\\res\\doc\\sherlock.txt";
         String text = Utils.readTextFile(filePath);
         CustomPrint.println(STR."Reading file from location: \{filePath}");
         CustomPrint.println(STR."File reading ended \{text.isEmpty() ? "failed" : "successful"}");
         // Adding words from the provided text to the word frequency map
-        addWordsToMap(text);
+        frequencyCount.addWordsToMap(text);
         // Printing the top k words and their frequencies
-        topKWords(k);
+        frequencyCount.topKWords(k);
         // Sentence to add more words to the map
         CustomPrint.println(STR."\n3000 entries of word \"Sherlock\" and \"Holmes\" is added, reanalyzing top \{k} words:");
 
         // Adding more words from the provided text to the word frequency map
-        addWordsToMap(" Sherlock Holmes ".repeat(3000)
+        frequencyCount.addWordsToMap(" Sherlock Holmes ".repeat(3000)
                 // Adding more words from the provided text to the word frequency map
         );
 
         // Printing the top k words and their frequencies after adding more words
-        topKWords(k);
+        frequencyCount.topKWords(k);
         // Sentence to remove words from the word frequency map
         filePath = ".\\res\\doc\\sherlock_sub.txt";
         String sentenceToRemove = Utils.readTextFile(filePath);
         CustomPrint.println(STR."\nReading file from location: \{filePath}");
         CustomPrint.println(STR."File reading ended \{sentenceToRemove.isEmpty() ? "failed" : "successful"}");
         // Removing words from the map based on the provided sentence
-        removeWordsFromMap(sentenceToRemove);
+        frequencyCount.removeWordsFromMap(sentenceToRemove);
         CustomPrint.println(STR."Many words removed, reanalyzing top \{k} words:");
         // Printing the top k words and their frequencies after removal
-        topKWords(k);
+        frequencyCount.topKWords(k);
         CustomPrint.println("\nCleaning map");
         // Clearing the word frequency map and max heap
-        cleanWordFrequencyMap();
+        frequencyCount.cleanWordFrequencyMap();
         // Printing top k words after cleaning the map
-        topKWords(k);
+        frequencyCount.topKWords(k);
     }
 }

@@ -3,12 +3,14 @@ package com.group4;
 import java.util.*;
 
 /**
- *
  * Class to find search frequency
+ *
  * @author Aniket Patel
- * */
+ */
 public class SearchFrequency {
     private final TreeMap<String, Integer> searchFrequency;
+
+    static FrequencyCount fq = new FrequencyCount();
 
     public SearchFrequency() {
         searchFrequency = new TreeMap<>();
@@ -17,6 +19,7 @@ public class SearchFrequency {
     // Method to track search frequency
     public void trackSearch(String word) {
         word = word.toLowerCase(); // Convert word to lowercase for case-insensitive search
+        fq.addWordsToMap(word);
         searchFrequency.put(word, searchFrequency.getOrDefault(word, 0) + 1);
     }
 
@@ -26,6 +29,10 @@ public class SearchFrequency {
         for (Map.Entry<String, Integer> entry : searchFrequency.entrySet()) {
             System.out.println(STR."\{entry.getKey()}: \{entry.getValue()}");
         }
+    }
+
+    public void displayTopKSearch(int k){
+        fq.topKWords(k);
     }
 
     public static void main(String[] args) {
@@ -43,7 +50,7 @@ public class SearchFrequency {
             tracker.trackSearch(word);
             tracker.displaySearchFrequency();
         }
-        
+
         scanner.close();
     }
 
