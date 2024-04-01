@@ -60,14 +60,22 @@ public class Driver {
                     String suggestedCarName = SpellChecking.checkSpelling(carName);
 
                     if (!suggestedCarName.equalsIgnoreCase(carName)) {
-                        CustomPrint.print("Do you want to search for suggested name? [y/n]:  ");
-                        String c = "";
-                        c = new Scanner(System.in).next();
-                        if (c.equalsIgnoreCase("y")) {
+                        Scanner scanner = new Scanner(System.in);
+                        String selection = "";
+                        try {
+                            CustomPrint.print("Do you want to search for suggested name? [y/n]:  ");
+                            selection = scanner.next();
+                        } catch (InputMismatchException e) {
+                            CustomPrint.printError( "Invalid input. Please enter a correct choice:");
+                            scanner.next();
+                            selection = scanner.next(); // Discard the invalid input and wait for a new input
+                        }
+
+                        if (selection.equalsIgnoreCase("y")) {
                             getCarByName(suggestedCarName);
                             trackNameSearch.trackSearch(suggestedCarName);
                             break;
-                        } else if (c.equalsIgnoreCase("n")) {
+                        } else if (selection.equalsIgnoreCase("n")) {
                             getCarByName(carName);
                             trackNameSearch.trackSearch(carName);
                             break;
@@ -84,8 +92,18 @@ public class Driver {
                     for (int i = 0; i < FuelType.values().length; i++) {
                         CustomPrint.println(STR."\{i + 1}. \{FuelType.values()[i]}");
                     }
-                    CustomPrint.print("Enter your choice: ");
-                    int selectionFuelType = new Scanner(System.in).nextInt();
+
+                    Scanner scanner = new Scanner(System.in);
+                    int selectionFuelType = -1;
+                    try {
+                        CustomPrint.print("Please enter your choice: ");
+                        selectionFuelType = scanner.nextInt();
+                    } catch (InputMismatchException e) {
+                        CustomPrint.printError("Invalid input. Please enter a correct choice:");
+                        scanner.next();
+                        selectionFuelType = scanner.nextInt(); // Discard the invalid input and wait for a new input
+                    }
+
                     FuelType fuel = FuelType.values()[selectionFuelType - 1];
                     getCarByFuelType(selectionFuelType);
                     trackFuelSearch.trackSearch(fuel.name());
@@ -95,18 +113,46 @@ public class Driver {
                     for (int i = 0; i < TransmissionType.values().length; i++) {
                         CustomPrint.println(STR."\{i + 1}. \{TransmissionType.values()[i]}");
                     }
-                    CustomPrint.print("Enter your choice: ");
-                    int selectionTransmissionType = new Scanner(System.in).nextInt();
+
+                    Scanner scanner = new Scanner(System.in);
+                    int selectionTransmissionType = -1;
+                    try {
+                        CustomPrint.print("Please enter your choice: ");
+                        selectionTransmissionType = scanner.nextInt();
+                    } catch (InputMismatchException e) {
+                        CustomPrint.printError("Invalid input. Please enter a correct choice:");
+                        scanner.next();
+                        selectionTransmissionType = scanner.nextInt(); // Discard the invalid input and wait for a new input
+                    }
                     TransmissionType transmission = TransmissionType.values()[selectionTransmissionType - 1];
                     getCarByTransmission(selectionTransmissionType);
                     trackTransmissionSearch.trackSearch(transmission.name());
                 }
                 case Price -> {
                     CustomPrint.println("Provide a price range for search.");
-                    CustomPrint.print("Minimum Price: ");
-                    int minPrice = new Scanner(System.in).nextInt();
-                    CustomPrint.print("Maximum Price: ");
-                    int maxPrice = new Scanner(System.in).nextInt();
+
+                    Scanner scanner = new Scanner(System.in);
+                    int minPrice = -1;
+                    try {
+                        CustomPrint.print("Minimum Price: ");
+                        minPrice = scanner.nextInt();
+                    } catch (InputMismatchException e) {
+                        CustomPrint.printError("Invalid input. Please enter a correct choice:");
+                        scanner.next();
+                        minPrice = scanner.nextInt(); // Discard the invalid input and wait for a new input
+                    }
+
+
+                    Scanner scanner1 = new Scanner(System.in);
+                    int maxPrice = -1;
+                    try {
+                        CustomPrint.print("Maximum Price: ");
+                        maxPrice = scanner1.nextInt();
+                    } catch (InputMismatchException e) {
+                        CustomPrint.printError( "Invalid input. Please enter a correct choice:");
+                        scanner1.next();
+                        maxPrice = scanner1.nextInt(); // Discard the invalid input and wait for a new input
+                    }
 
                     if ((minPrice < 0 || maxPrice <= 0) || (maxPrice < minPrice)) {
                         CustomPrint.printError("Search By Price", "Please provide a valid range.");
@@ -117,10 +163,28 @@ public class Driver {
                 }
                 case KmsDriven -> {
                     CustomPrint.println("Provide a kms range for search.");
-                    CustomPrint.print("Minimum Kms: ");
-                    int minKms = new Scanner(System.in).nextInt();
-                    CustomPrint.print("Maximum Kms: ");
-                    int maxKms = new Scanner(System.in).nextInt();
+                    Scanner scanner = new Scanner(System.in);
+                    int minKms = -1;
+                    try {
+                        CustomPrint.print("Minimum Kms: ");
+                        minKms = scanner.nextInt();
+                    } catch (InputMismatchException e) {
+                        CustomPrint.printError("Invalid input. Please enter a correct choice:");
+                        scanner.next();
+                        minKms = scanner.nextInt(); // Discard the invalid input and wait for a new input
+                    }
+
+
+                    Scanner scanner1 = new Scanner(System.in);
+                    int maxKms = -1;
+                    try {
+                        CustomPrint.print("Maximum Kms: ");
+                        maxKms = scanner1.nextInt();
+                    } catch (InputMismatchException e) {
+                        CustomPrint.printError( "Invalid input. Please enter a correct choice:");
+                        scanner1.next();
+                        maxKms = scanner1.nextInt(); // Discard the invalid input and wait for a new input
+                    }
 
                     if ((minKms < 0 || maxKms <= 0) || (maxKms < minKms)) {
                         CustomPrint.printError("Search By Kms", "Please provide a valid range.");
@@ -136,20 +200,7 @@ public class Driver {
                     CustomPrint.println("Exiting program...");
                 }
                 case Stats -> {
-                    CustomPrint.println("Search Stats");
-//                    if (trackNameSearch.isResultAvailable()) {
-//                        CustomPrint.println("Search By Name");
-//                        trackNameSearch.displayTopKSearch(3);
-//                    }
-//                    if (trackFuelSearch.isResultAvailable()) {
-//                        CustomPrint.println("Search By Fuel");
-//                        trackFuelSearch.displayTopKSearch(3);
-//                    }
-//                    if (trackTransmissionSearch.isResultAvailable()) {
-//                        CustomPrint.println("Search By Transmission");
-//                        trackTransmissionSearch.displayTopKSearch(3);
-//                    }
-
+                    CustomPrint.println("Search Stats are as follows:\n");
                     CustomPrint.println("Search By Name");
                     trackNameSearch.displaySearchFrequency();
 
@@ -171,8 +222,8 @@ public class Driver {
                     listCars.clear();
                     bagOfWords.clear();
                     CustomPrint.println("Regathering data...");
-//                    listCars.addAll(SeleniumDriver.crawlListCars());
-//                    bagOfWords.addAll(Utils.generateBagOfWords(listCars));
+                    listCars.addAll(HtmlParsing.crawlListCars());
+                    bagOfWords.addAll(Utils.generateBagOfWords(listCars));
                 }
                 case null, default -> {
                     CustomPrint.print("Please select a valid choice: ");
@@ -296,9 +347,19 @@ public class Driver {
             if (!listCompletedWords.isEmpty()) {
                 CustomPrint.print("AutoComplete", "It seems that the input word is incomplete.\nDid you mean anyone of the following: ");
                 CustomPrint.println(listCompletedWords);
-                CustomPrint.print("Do you want to search again? [y/n]");
-                String c = new Scanner(System.in).next();
-                if (c.equalsIgnoreCase("y")) {
+
+                Scanner scanner = new Scanner(System.in);
+                String selection = "";
+                try {
+                    CustomPrint.print("Do you want to search again? [y/n]");
+                    selection = scanner.next();
+                } catch (InputMismatchException e) {
+                    CustomPrint.printError("Search Selection", "Invalid input. Please enter a correct choice:");
+                    scanner.next();
+                    selection = scanner.next(); // Discard the invalid input and wait for a new input
+                }
+
+                if (selection.equalsIgnoreCase("y")) {
                     CustomPrint.print("Enter a name from the provided suggestions: ");
                     String newName = new Scanner(System.in).next();
                     if (listCompletedWords.contains(newName)) {
@@ -306,7 +367,7 @@ public class Driver {
                     } else {
                         CustomPrint.printError("Invalid Selection.");
                     }
-                } else if (c.equalsIgnoreCase("n")) {
+                } else if (selection.equalsIgnoreCase("n")) {
                     return;
                 } else {
                     CustomPrint.printError("Suggested Name", "Invalid Choice!");
@@ -406,7 +467,16 @@ public class Driver {
 
         CustomPrint.println("Please enter your choice");
 
-        int choice = new Scanner(System.in).nextInt();
+        Scanner scanner = new Scanner(System.in);
+        int choice = -1;
+        try {
+            CustomPrint.print("Please enter your choice: ");
+            choice = scanner.nextInt();
+        } catch (InputMismatchException e) {
+            CustomPrint.printError("Search Selection", "Invalid input. Please enter a correct choice:");
+            scanner.next();
+            choice = scanner.nextInt(); // Discard the invalid input and wait for a new input
+        }
 
         return switch (choice) {
             case 1 -> Utils.SearchType.Name;
