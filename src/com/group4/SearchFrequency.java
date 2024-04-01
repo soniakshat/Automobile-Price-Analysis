@@ -35,6 +35,10 @@ public class SearchFrequency {
         fq.topKWords(k);
     }
 
+    public boolean isResultAvailable(){
+        return  fq.isFrequencyDataEmpty();
+    }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         SearchFrequency tracker = new SearchFrequency();

@@ -30,7 +30,7 @@ public class Utils {
         ImageAvailable,
         KmsDriven,
         Stats,
-        Exit,
+        Exit, DeleteCacheAndRefreshData,
     }
 
     public static final String htmlCacheFolder = ".\\res\\generated\\pages\\";
@@ -174,6 +174,29 @@ public class Utils {
             e.printStackTrace();
         }
         return jsonData;
+    }
+
+    public static void deleteAllFilesInFolder(String folderPath) {
+        Path folder = Paths.get(folderPath);
+        if (!Files.exists(folder) || !Files.isDirectory(folder)) {
+            CustomPrint.printError(STR."Invalid folder path: \{folderPath}");
+            return;
+        }
+
+        try {
+            Files.walk(folder)
+                    .filter(Files::isRegularFile)
+                    .forEach(path -> {
+                        try {
+                            Files.deleteIfExists(path);
+                        } catch (IOException e) {
+                            CustomPrint.printError((STR."Error deleting file \{path.toString()}: \{e.getMessage()}"));
+                        }
+                    });
+            CustomPrint.println(STR."All files in the folder \{folderPath} have been deleted.");
+        } catch (IOException e) {
+            CustomPrint.printError((STR."Error deleting files in the folder \{folderPath}: \{e.getMessage()}"));
+        }
     }
 }
 

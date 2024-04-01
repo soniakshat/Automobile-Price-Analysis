@@ -24,8 +24,6 @@ public class FrequencyCount {
      * @param text The input text to add words from.
      */
     public void addWordsToMap(String text) {
-        CustomPrint.printError("Word Added: " + text);
-        CustomPrint.print("BOW: " + Utils.generateBagOfWords(text));
         addWordsToMap(Utils.generateBagOfWords(text));
     }
 
@@ -121,6 +119,9 @@ public class FrequencyCount {
         }
     }
 
+    public boolean isFrequencyDataEmpty(){
+        return maxHeap.isEmpty();
+    }
     public static void main(String[] args) {
         FrequencyCount frequencyCount = new FrequencyCount();
         int k = 5;
