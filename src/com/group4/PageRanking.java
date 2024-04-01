@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class PageRanking {
     private List<Map<String, Object>> pages;
-    private Map<String, Set<Integer>> invertedIndex;
+    private final Map<String, Set<Integer>> invertedIndex;
 
     public PageRanking() {
 

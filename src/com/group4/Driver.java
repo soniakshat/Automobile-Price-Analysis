@@ -455,7 +455,7 @@ public class Driver {
             }
 
             // Print all filtered pages together
-            System.out.println("\nFiltered Ranked Pages based on search method \"" + searchMethod + "\" and keyword \"" + strValueParam + "\" or range [" + intValueParam + " - " + strValueParam + "]:\n");
+            System.out.println("\nFiltered Ranked Pages:");
             for (int i = 0; i < allRankedPages.size(); i++) {
                 Map<String, Object> page = allRankedPages.get(i);
                 System.out.println("Rank: " + (i + 1) + ", Name: " + page.get("name") + ", Price: " + page.get("price"));
