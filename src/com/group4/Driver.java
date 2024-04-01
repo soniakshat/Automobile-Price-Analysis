@@ -1,5 +1,7 @@
 package com.group4;
 
+import jdk.jshell.execution.Util;
+
 import static java.lang.StringTemplate.STR;
 
 import java.io.IOException;
@@ -25,6 +27,8 @@ public class Driver {
     private static final SearchFrequency trackTransmissionSearch = new SearchFrequency();
 
     public static void main(String[] args) {
+        Utils.createDirectoryIfNotExist(Utils.htmlCacheFolder);
+        Utils.createDirectoryIfNotExist(Utils.jsonCacheFolder);
 //        basicIntegration();
         advanceIntegration();
     }

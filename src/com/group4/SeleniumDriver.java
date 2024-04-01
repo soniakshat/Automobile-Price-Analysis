@@ -2,8 +2,6 @@ package com.group4;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -19,13 +17,12 @@ import java.util.List;
 
 public class SeleniumDriver {
     static final List<Car> listCars = new ArrayList<>();
+    static final String htmlCacheFolderPath = Utils.htmlCacheFolder;
+    static final String jsonCacheFolderPath = Utils.jsonCacheFolder;
 
     static void CrawlKijijiAuto() {
         String url = "https://www.kijijiautos.ca/cars/#od=down&sb=rel";
         String webSiteName = url.replaceAll(".*www\\.(.*?)\\..*", "$1");
-
-        String htmlCacheFolderPath = Utils.htmlCacheFolder;
-        String jsonCacheFolderPath = Utils.jsonCacheFolder;
 
         String htmlCacheFileName = STR."Cache_\{webSiteName}.html";
         String jsonCacheFileName = STR."\{webSiteName}.json";
@@ -55,27 +52,21 @@ public class SeleniumDriver {
             if (file.exists()) {
                 CustomPrint.println("Selenium", STR."File Cache Exists :: \{htmlCacheFileName}");
                 url = "file://" + file.getAbsolutePath();
-            } else {
-                // create .html cache here
-                try {
-                    Document document = Jsoup.connect(url).get();
-                    String htmlCode = document.html();
-
-                    Utils.createDirectoryIfNotExist(htmlCacheFolderPath);
-
-                    try (FileWriter writer = new FileWriter(htmlCacheFolderPath + htmlCacheFileName)) {
-                        writer.write(htmlCode);
-                    }
-                    CustomPrint.println("Selenium", STR."Crawled File Saved: \{htmlCacheFileName}");
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
 
             CustomPrint.println(STR."Trying to open: \{url}");
             // Open the provided page on chrome
             driver.get(url);
+
+            String htmlCode = driver.findElement(By.tagName("html")).getAttribute("innerHTML");
+
+            if(!new File(htmlPath).exists()){
+                try (FileWriter writer = new FileWriter(htmlCacheFolderPath + htmlCacheFileName)) {
+                    writer.write(htmlCode);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
 
             // minimize the chrome window
             driver.manage().window().minimize();
@@ -147,6 +138,8 @@ public class SeleniumDriver {
             for (Car car : kijijiCars) {
                 kijijiJsonCars.put(car.getJsonObject());
             }
+
+
             createJsonFile(jsonCacheFileName, kijijiJsonCars);
 
             // exit the Chrome window
@@ -160,6 +153,8 @@ public class SeleniumDriver {
     }
 
     public static void main(String[] args) {
+        Utils.createDirectoryIfNotExist(htmlCacheFolderPath);
+        Utils.createDirectoryIfNotExist(jsonCacheFolderPath);
         CrawlKijijiAuto();
     }
 
@@ -169,7 +164,7 @@ public class SeleniumDriver {
     }
 
     public static void createJsonFile(String fileName, JSONArray jsonArray) {
-        File file = new File(fileName);
+        File file = new File(jsonCacheFolderPath + fileName);
         try (FileWriter fileWriter = new FileWriter(file)) {
             File jsonFolder = new File(Utils.jsonCacheFolder);
 

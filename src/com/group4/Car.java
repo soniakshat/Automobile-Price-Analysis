@@ -67,8 +67,6 @@ public class Car {
             carObject.put("fuelType", fuelType);
             carObject.put("transmission", transmissionType);
 
-            CustomPrint.printError("JsonObject", carObject.toString());
-
             return carObject;
     }
 
