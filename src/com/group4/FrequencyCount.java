@@ -119,6 +119,10 @@ public class FrequencyCount {
         }
     }
 
+    /**
+     * checks if the frequency data is available
+     * @author Akshat Soni
+     * */
     public boolean isFrequencyDataEmpty(){
         return maxHeap.isEmpty();
     }

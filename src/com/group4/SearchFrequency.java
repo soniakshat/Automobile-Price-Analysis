@@ -10,7 +10,7 @@ import java.util.*;
 public class SearchFrequency {
     private final TreeMap<String, Integer> searchFrequency;
 
-    static FrequencyCount fq = new FrequencyCount();
+    static FrequencyCount frequencyCount = new FrequencyCount();
 
     public SearchFrequency() {
         searchFrequency = new TreeMap<>();
@@ -19,7 +19,7 @@ public class SearchFrequency {
     // Method to track search frequency
     public void trackSearch(String word) {
         word = word.toLowerCase(); // Convert word to lowercase for case-insensitive search
-        fq.addWordsToMap(word);
+        frequencyCount.addWordsToMap(word);
         searchFrequency.put(word, searchFrequency.getOrDefault(word, 0) + 1);
     }
 
@@ -31,12 +31,21 @@ public class SearchFrequency {
         }
     }
 
+    /**
+     * display top k search frequency results
+     * @param k how many search result to show
+     * @author Akshat Soni
+     */
     public void displayTopKSearch(int k){
-        fq.topKWords(k);
+        frequencyCount.topKWords(k);
     }
 
+    /**
+     * Check if search frequency data is available
+     * @author Akshat Soni
+     * */
     public boolean isResultAvailable(){
-        return  fq.isFrequencyDataEmpty();
+        return  frequencyCount.isFrequencyDataEmpty();
     }
 
     public static void main(String[] args) {
@@ -57,5 +66,4 @@ public class SearchFrequency {
 
         scanner.close();
     }
-
 }

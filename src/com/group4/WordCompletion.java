@@ -104,13 +104,6 @@ public class WordCompletion {
 
     public static List<String> completionSuggestions(String incompleteWord) {
         List<String> suggestionList = trie.findWordsWithPrefix(incompleteWord);
-        if (!suggestionList.isEmpty()) {
-            CustomPrint.print("AutoComplete", "It seems that the input word is incomplete.\nDid you mean anyone of the following: ");
-//            for (String word : suggestionList) {
-//                CustomPrint.print(STR."\{word}, ");
-//            }
-            CustomPrint.println(suggestionList);
-        }
         return suggestionList;
     }
 }

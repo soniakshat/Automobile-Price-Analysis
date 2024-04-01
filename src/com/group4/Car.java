@@ -10,6 +10,10 @@ enum TransmissionType {
     Automatic, NA, Manual
 }
 
+/**
+ * Custom car class to create car objects
+ * @author Akshat Soni
+ * */
 public class Car {
     private String name;
     private int price;
@@ -19,6 +23,16 @@ public class Car {
     private String imageUrl;
 
 
+    /**
+     * Car object constructor
+     * @param name Car Name
+     * @param price Car price
+     * @param fuelType fuel type
+     * @param imageUrl url of image
+     * @param transmissionType transmission type
+     * @param kmsDriven total kms driven
+     * @author Akshat Soni
+     * */
     public Car(String name, int price, FuelType fuelType, TransmissionType transmissionType, int kmsDriven, String imageUrl) {
         this.name = name;
         this.price = price;
@@ -28,36 +42,60 @@ public class Car {
         this.imageUrl = imageUrl;
     }
 
+    /**
+     * @return car name
+     * @author Akshat Soni
+     * */
     public String getName() {
         return name;
     }
 
+    /**
+     * @return fuel type
+     * @author Akshat Soni
+     * */
     public FuelType getFuelType() {
         return fuelType;
     }
 
+    /**
+     * @return transmission type
+     * @author Akshat Soni
+     * */
     public TransmissionType getTransmissionType() {
         return transmissionType;
     }
 
+    /**
+     * @return kms driven
+     * @author Akshat Soni
+     * */
     public int getKmsDriven() {
         return kmsDriven;
     }
 
+    /**
+     * @return image url
+     * @author Akshat Soni
+     * */
     public String getImageUrl() {
         return imageUrl;
     }
 
+    /**
+     * @return car price
+     * @author Akshat Soni
+     * */
     public int getPrice() {
         return price;
     }
 
-    public void printDetails() {
-        CustomPrint.println(this);
-    }
-
+    /**
+     * Creates a json object of the car object
+     * @return json object
+     * @author Akshat Soni
+     * */
     public JSONObject getJsonObject() {
-
             JSONObject carObject = new JSONObject();
 
             carObject.put("name", name);
@@ -70,6 +108,11 @@ public class Car {
             return carObject;
     }
 
+
+    /**
+     * @return Stringify the car object
+     * @author Akshat Soni
+     * */
     @Override
     public String toString() {
         StringBuilder data = new StringBuilder();

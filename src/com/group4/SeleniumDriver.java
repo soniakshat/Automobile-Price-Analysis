@@ -15,11 +15,21 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class to parse website and store the car data
+ *
+ * @author Akshat Soni
+ */
 public class SeleniumDriver {
     static final List<Car> listCars = new ArrayList<>();
     static final String htmlCacheFolderPath = Utils.htmlCacheFolder;
     static final String jsonCacheFolderPath = Utils.jsonCacheFolder;
 
+    /**
+     * Crawl kijiji auto website and store the car data in json file
+     *
+     * @author Akshat Soni
+     */
     static void CrawlKijijiAuto() {
         String url = "https://www.kijijiautos.ca/cars/#od=down&sb=rel";
         String webSiteName = url.replaceAll(".*www\\.(.*?)\\..*", "$1");
@@ -38,9 +48,9 @@ public class SeleniumDriver {
         CustomPrint.println("Parsing", url);
 
         // If json exist then read from that else create json
-        if (isJsonFileExists(jsonCacheFileName)) {
+        if (Utils.isJsonFileExists(jsonCacheFileName)) {
             CustomPrint.println("JsonCache", STR."Found Json Cache \{jsonCacheFileName}");
-            List<Car> jsonCars = readJsonFileToCarList(jsonPath);
+            List<Car> jsonCars = Utils.readJsonFileToCarList(jsonPath);
             listCars.addAll(jsonCars);
         } else {
             // Create a new ChromeDriver
@@ -60,7 +70,7 @@ public class SeleniumDriver {
 
             String htmlCode = driver.findElement(By.tagName("html")).getAttribute("innerHTML");
 
-            if(!new File(htmlPath).exists()){
+            if (!new File(htmlPath).exists()) {
                 try (FileWriter writer = new FileWriter(htmlCacheFolderPath + htmlCacheFileName)) {
                     writer.write(htmlCode);
                 } catch (IOException e) {
@@ -139,14 +149,19 @@ public class SeleniumDriver {
                 kijijiJsonCars.put(car.getJsonObject());
             }
 
-
-            createJsonFile(jsonCacheFileName, kijijiJsonCars);
+            Utils.createJsonFile(jsonCacheFileName, kijijiJsonCars);
 
             // exit the Chrome window
             driver.quit();
         }
     }
 
+    /**
+     * Crawls different websites and fetch the car data and provide list of car object
+     *
+     * @return list of car object
+     * @author Akshat Soni
+     */
     public static List<Car> crawlListCars() {
         CrawlKijijiAuto();
         return listCars;
@@ -156,51 +171,5 @@ public class SeleniumDriver {
         Utils.createDirectoryIfNotExist(htmlCacheFolderPath);
         Utils.createDirectoryIfNotExist(jsonCacheFolderPath);
         CrawlKijijiAuto();
-    }
-
-    public static boolean isJsonFileExists(String fileName) {
-        File file = new File(Utils.jsonCacheFolder + fileName);
-        return file.exists() && file.isFile() && file.getName().endsWith(".json");
-    }
-
-    public static void createJsonFile(String fileName, JSONArray jsonArray) {
-        File file = new File(jsonCacheFolderPath + fileName);
-        try (FileWriter fileWriter = new FileWriter(file)) {
-            File jsonFolder = new File(Utils.jsonCacheFolder);
-
-            if (!jsonFolder.exists()) {
-                Files.createDirectories(Paths.get(Utils.jsonCacheFolder));
-            }
-
-            if (jsonFolder.exists() && jsonFolder.isDirectory()) {
-                try (FileWriter writer = new FileWriter(Utils.jsonCacheFolder + fileName)) {
-                    writer.write(jsonArray.toString(4));
-                    fileWriter.flush();
-                }
-                CustomPrint.println("Selenium Json", STR."Json Data of Cars Saved: \{fileName}");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static List<Car> readJsonFileToCarList(String filePath) {
-        List<Car> carList = new ArrayList<>();
-
-        String jsonData = Utils.readJsonFile(filePath);
-
-        JSONArray jsonArray = new JSONArray(jsonData);
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject jsonObject = jsonArray.getJSONObject(i);
-            String name = jsonObject.getString("name");
-            int price = jsonObject.getInt("price");
-            FuelType fuelType = FuelType.valueOf(jsonObject.getString("fuelType"));
-            TransmissionType transmissionType = TransmissionType.valueOf(jsonObject.getString("transmission"));
-            int kms = jsonObject.getInt("kms");
-            String imgUrl = jsonObject.getString("image");
-            imgUrl = imgUrl == null || imgUrl.isEmpty() ? "" : imgUrl;
-            carList.add(new Car(name, price, fuelType, transmissionType, kms, imgUrl));
-        }
-        return carList;
     }
 }

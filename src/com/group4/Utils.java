@@ -1,27 +1,19 @@
 package com.group4;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
 public class Utils {
-    public enum Task {
-        CrawlWebsite,
-        DeleteCacheAndReCrawl,
-        RankPage,
-        WordSuggestion,
-        AutoComplete,
-        Exit,
-    }
-
     public enum SearchType {
         Name,
         Fuel,
@@ -67,6 +59,11 @@ public class Utils {
         return words;
     }
 
+    /**
+     * Generates a bag of words from provided List of Car
+     * @param carList List of Car objects
+     * @author Akshat Soni
+     * */
     public static List<String> generateBagOfWords(List<Car> carList) {
         // Returns if the input is null or empty
         if (carList == null || carList.isEmpty()) {
@@ -166,6 +163,12 @@ public class Utils {
         return false;
     }
 
+    /**
+     * Reads the json file and provides a string
+     * @param path path to json file
+     * @return string of the data of json file
+     * @author Akshat Soni
+     * */
     public static String readJsonFile(String path) {
         String jsonData = "";
         try {
@@ -176,6 +179,11 @@ public class Utils {
         return jsonData;
     }
 
+    /**
+     * Deletes all folder from the provided path
+     * @param folderPath path of folder to be deleted
+     * @author Akshat Soni
+     * */
     public static void deleteAllFilesInFolder(String folderPath) {
         Path folder = Paths.get(folderPath);
         if (!Files.exists(folder) || !Files.isDirectory(folder)) {
@@ -197,6 +205,68 @@ public class Utils {
         } catch (IOException e) {
             CustomPrint.printError((STR."Error deleting files in the folder \{folderPath}: \{e.getMessage()}"));
         }
+    }
+
+    /**
+     * Checks if the jsonFile exists or not
+     * @author Akshat Soni
+     * */
+    public static boolean isJsonFileExists(String fileName) {
+        File file = new File(Utils.jsonCacheFolder + fileName);
+        return file.exists() && file.isFile() && file.getName().endsWith(".json");
+    }
+
+    /**
+     * Creates a json file on provided
+     * @param fileName name of json file to be created
+     * @param jsonArray json array which is to be stored in json file
+     * @author Akshat Soni
+     * */
+    public static void createJsonFile(String fileName, JSONArray jsonArray) {
+        File file = new File(jsonCacheFolderPath + fileName);
+        try (FileWriter fileWriter = new FileWriter(file)) {
+            File jsonFolder = new File(Utils.jsonCacheFolder);
+
+            if (!jsonFolder.exists()) {
+                Files.createDirectories(Paths.get(Utils.jsonCacheFolder));
+            }
+
+            if (jsonFolder.exists() && jsonFolder.isDirectory()) {
+                try (FileWriter writer = new FileWriter(Utils.jsonCacheFolder + fileName)) {
+                    writer.write(jsonArray.toString(4));
+                    fileWriter.flush();
+                }
+                CustomPrint.println("Selenium Json", STR."Json Data of Cars Saved: \{fileName}");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * reads a json file for array of car objects from provided path
+     * @param filePath path to the json flie
+     * @return list of car objects
+     * @author Akshat Soni
+     * */
+    public static List<Car> readJsonFileToCarList(String filePath) {
+        List<Car> carList = new ArrayList<>();
+
+        String jsonData = Utils.readJsonFile(filePath);
+
+        JSONArray jsonArray = new JSONArray(jsonData);
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            String name = jsonObject.getString("name");
+            int price = jsonObject.getInt("price");
+            FuelType fuelType = FuelType.valueOf(jsonObject.getString("fuelType"));
+            TransmissionType transmissionType = TransmissionType.valueOf(jsonObject.getString("transmission"));
+            int kms = jsonObject.getInt("kms");
+            String imgUrl = jsonObject.getString("image");
+            imgUrl = imgUrl == null || imgUrl.isEmpty() ? "" : imgUrl;
+            carList.add(new Car(name, price, fuelType, transmissionType, kms, imgUrl));
+        }
+        return carList;
     }
 }
 

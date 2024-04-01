@@ -180,13 +180,16 @@ public class Driver {
         } while (choice != Utils.SearchType.Exit);
     }
 
+    /**
+     * get cars from the provided range of kms
+     * @param minKms min kms
+     * @param maxKms max kms
+     * @author Akshat Soni*/
     private static void getCarsByKms(int minKms, int maxKms) {
         List<Car> listRequiredCars = new ArrayList<>();
         for (Car car : listCars) {
             int carKmsDriven = car.getKmsDriven();
-            if (carKmsDriven <= 0 || !(carKmsDriven >= minKms && carKmsDriven <= maxKms)) {
-                continue;
-            } else {
+            if (carKmsDriven > 0 && (carKmsDriven >= minKms && carKmsDriven <= maxKms)) {
                 listRequiredCars.add(car);
             }
         }
@@ -199,13 +202,17 @@ public class Driver {
         }
     }
 
+    /**
+     * get cars from the provided range of price
+     * @param minPrice min price
+     * @param maxPrice max price
+     * @author Akshat Soni
+     * */
     private static void getCarByPrice(int minPrice, int maxPrice) {
         List<Car> listRequiredCars = new ArrayList<>();
         for (Car car : listCars) {
             int carPrice = car.getPrice();
-            if (carPrice <= 0 || !(carPrice >= minPrice && carPrice <= maxPrice)) {
-                continue;
-            } else {
+            if (carPrice > 0 && (carPrice >= minPrice && carPrice <= maxPrice)) {
                 listRequiredCars.add(car);
             }
         }
@@ -218,13 +225,16 @@ public class Driver {
         }
     }
 
+    /**
+     * get cars from the provided transmission type
+     * @param selectionTransmissionType transmission type
+     * @author Akshat Soni
+     * */
     private static void getCarByTransmission(int selectionTransmissionType) {
         List<Car> listRequiredCars = new ArrayList<>();
         for (Car car : listCars) {
             TransmissionType carTransmissionType = car.getTransmissionType();
-            if (carTransmissionType != TransmissionType.values()[selectionTransmissionType - 1]) {
-                continue;
-            } else {
+            if (carTransmissionType == TransmissionType.values()[selectionTransmissionType - 1]) {
                 listRequiredCars.add(car);
             }
         }
@@ -233,13 +243,16 @@ public class Driver {
         }
     }
 
+    /**
+     * get cars from the provided fuel type
+     * @param selectionFuelType fuel type
+     * @author Akshat Soni
+     * */
     private static void getCarByFuelType(int selectionFuelType) {
         List<Car> listRequiredCars = new ArrayList<>();
         for (Car car : listCars) {
             FuelType carFuelType = car.getFuelType();
-            if (carFuelType != FuelType.values()[selectionFuelType - 1]) {
-                continue;
-            } else {
+            if (carFuelType == FuelType.values()[selectionFuelType - 1]) {
                 listRequiredCars.add(car);
             }
         }
@@ -248,6 +261,11 @@ public class Driver {
         }
     }
 
+    /**
+     * get cars by their name
+     * @param searchName name of car
+     * @author Akshat Soni
+     * */
     private static void getCarByName(String searchName) {
         List<Car> listRequiredCars = new ArrayList<>();
         for (Car car : listCars) {
@@ -264,8 +282,12 @@ public class Driver {
 
         if (listRequiredCars.isEmpty()) {
             List<String> listCompletedWords = WordCompletion.completionSuggestions(searchName);
+
             if (!listCompletedWords.isEmpty()) {
-                CustomPrint.println("Do you want to search again? [y/n]");
+                CustomPrint.print("AutoComplete", "It seems that the input word is incomplete.\nDid you mean anyone of the following: ");
+                CustomPrint.println(listCompletedWords);
+
+                CustomPrint.print("Do you want to search again? [y/n]");
                 String c = new Scanner(System.in).next();
                 if (c.equalsIgnoreCase("y")) {
                     CustomPrint.print("Enter a name from the provided suggestions: ");
@@ -286,13 +308,15 @@ public class Driver {
         }
     }
 
+    /**
+     * get cars which has their image available
+     * @author Akshat Soni
+     * */
     private static void getCarsByImage() {
         List<Car> listRequiredCars = new ArrayList<>();
         for (Car car : listCars) {
             String imageUrl = car.getImageUrl();
-            if (imageUrl == null || imageUrl.isBlank()) {
-                continue;
-            } else {
+            if (imageUrl != null && !imageUrl.isBlank()) {
                 listRequiredCars.add(car);
             }
         }
@@ -301,6 +325,10 @@ public class Driver {
         }
     }
 
+    /**
+     * provides the selected search type
+     * @author Akshat Soni
+     * */
     private static Utils.SearchType askForChoiceAdvance() {
         CustomPrint.println("\n-----------------------");
         CustomPrint.println("Select a search method.");
