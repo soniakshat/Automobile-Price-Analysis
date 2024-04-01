@@ -210,7 +210,7 @@ public class HtmlParsing {
                 Elements carListings = doc.select("div.vehicle-list-cell");
 
                 for (Element carListing : carListings) {
-                    String name = carListing.select("a[itemprop=name]").text();
+                    String name = carListing.select("span[itemprop=model]").text();
 
                     String imageUrl = carListing.select("img[itemprop=image]").attr("src");
 
