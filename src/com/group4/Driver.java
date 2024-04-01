@@ -6,7 +6,6 @@ import java.util.*;
 
 /**
  * Main class that will run everything1
- *
  * @author Akshat Soni
  */
 public class Driver {
@@ -34,7 +33,26 @@ public class Driver {
         CustomPrint.println("=".repeat(30));
 
         CustomPrint.println("Instructions", """
-                This program will give you information about a car by crawling below mentioned websites.""");
+                This program will give you information about a car by crawling below mentioned websites.
+                                                 _________
+                                          _.--""'-----,   `"--.._
+                                       .-''   _/_      ; .'"----,`-,
+                                     .'      :___:     ; :      ;;`.`.
+                                    .      _.- _.-    .' :      ::  `..
+                                 __;..----------------' :: ___  ::   ;;
+                            .--"". '           ___.....`:=(___)-' :--'`.
+                          .'   .'         .--''__       :       ==:    ;
+                      .--/    /        .'.''     ``-,   :         :   '`-.
+                   ."', :    /       .'-`\\\\       .--.\\ :         :  ,   _\\
+                  ;   ; |   ;       /:'  ;;      /__  \\\\:         :  :  /_\\\\
+                  |\\_/  |   |      / \\__//      /"--\\\\ \\:         :  : ;|`\\|   \s
+                  : "  /\\__/\\____//   ""\"      /     \\\\ :         :  : :|'||
+                [""\"""\"""\"--------........._  /      || ;      __.:--' :|//|
+                 "------....______         ].'|      // |--""\"'__...-'`\\ \\//
+                   `| ACC-Project |__;_...--'": :  \\    //  |---""\"      \\__\\_/
+                     ""\"""\"""\"'            \\ \\  \\_.//  /
+                       `---'                \\ \\_     _'
+                                             `--`---'  dp""");
 
 
         CustomPrint.println("=".repeat(30));
