@@ -42,6 +42,32 @@ public class PageRanking_and_invertedIndexing {
     }
 
     /**
+     * This method performs a keyword-based search using the inverted index.
+     * It returns a list of pages containing the specified keyword.
+     *
+     * @param keyword The keyword to search for
+     * @return A list of pages containing the specified keyword
+     */
+    public List<Map<String, Object>> searchByKeyword(String keyword) {
+        // Check if the keyword exists in the inverted index
+        if (!invertedIndex.containsKey(keyword.toLowerCase())) {
+            // If the keyword is not found, return an empty list
+            return Collections.emptyList();
+        }
+
+        // Retrieve the set of indices associated with the keyword in the inverted index
+        Set<Integer> indices = invertedIndex.get(keyword.toLowerCase());
+        // Create a list to store the pages containing the keyword
+        List<Map<String, Object>> result = new ArrayList<>();
+        // Iterate over the indices and retrieve the corresponding pages from the pages list
+        for (int index : indices) {
+            result.add(pages.get(index));
+        }
+        // Return the list of pages containing the keyword
+        return result;
+    }
+
+    /**
      * This method reads pages from a JSON file and populates the 'pages' list with the parsed data.
      *
      * @param filename The name of the JSON file to read pages from
@@ -97,32 +123,6 @@ public class PageRanking_and_invertedIndexing {
                 return name1.compareToIgnoreCase(name2); // Sort alphabetically if both pages contain or do not contain search name
             }
         });
-    }
-
-    /**
-     * This method performs a keyword-based search using the inverted index.
-     * It returns a list of pages containing the specified keyword.
-     *
-     * @param keyword The keyword to search for
-     * @return A list of pages containing the specified keyword
-     */
-    public List<Map<String, Object>> searchByKeyword(String keyword) {
-        // Check if the keyword exists in the inverted index
-        if (!invertedIndex.containsKey(keyword.toLowerCase())) {
-            // If the keyword is not found, return an empty list
-            return Collections.emptyList();
-        }
-
-        // Retrieve the set of indices associated with the keyword in the inverted index
-        Set<Integer> indices = invertedIndex.get(keyword.toLowerCase());
-        // Create a list to store the pages containing the keyword
-        List<Map<String, Object>> result = new ArrayList<>();
-        // Iterate over the indices and retrieve the corresponding pages from the pages list
-        for (int index : indices) {
-            result.add(pages.get(index));
-        }
-        // Return the list of pages containing the keyword
-        return result;
     }
 
     /**
