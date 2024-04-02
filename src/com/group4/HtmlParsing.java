@@ -132,7 +132,7 @@ public class HtmlParsing {
 
                     String imageUrl = carElement.select("figure[data-testid=VehicleListItem-figure] img").attr("src");
 
-                    String price = carElement.select("div.g3uM7V[data-testid=VehicleListItem-price] span[data-testid=searchResultItemPrice]").text();
+                    String price = carElement.select("div.g3uM7V[data-testid=VehicleListItem-price] span[data-testid=searchResultItemPrice]")first().text();
 //                    price = price.replaceAll("\\D", "");
 //                    price = price.isEmpty() ? "-1" : price;
 
