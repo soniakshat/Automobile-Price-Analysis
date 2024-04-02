@@ -7,11 +7,78 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="jsoup" level="application" />
-    <orderEntry type="library" name="seleniumhq.selenium.api" level="application" />
-    <orderEntry type="library" name="seleniumhq.selenium.chrome.driver" level="application" />
-    <orderEntry type="library" name="seleniumhq.selenium.support" level="application" />
-    <orderEntry type="library" name="json" level="application" />
-    <orderEntry type="library" name="json-simple-1.1" level="application" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/Downloads/json-20240303.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/Downloads/jsoup-1.17.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/Downloads/json-simple-1.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://$USER_HOME$/Downloads/selenium-java-4/lib" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-api-4.19.1.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-chrome-driver-4.19.1.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-chromium-driver-4.19.1.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-devtools-v85-4.19.1.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-devtools-v121-4.19.1.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-devtools-v122-4.19.1.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-devtools-v123-4.19.1.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-edge-driver-4.19.1.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-firefox-driver-4.19.1.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-http-4.19.1.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-ie-driver-4.19.1.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-java-4.19.1.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-json-4.19.1.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-manager-4.19.1.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-os-4.19.1.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-remote-driver-4.19.1.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-safari-driver-4.19.1.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-support-4.19.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-api-4.19.1-sources.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-chrome-driver-4.19.1-sources.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-chromium-driver-4.19.1-sources.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-devtools-v85-4.19.1-sources.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-devtools-v121-4.19.1-sources.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-devtools-v122-4.19.1-sources.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-devtools-v123-4.19.1-sources.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-edge-driver-4.19.1-sources.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-firefox-driver-4.19.1-sources.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-http-4.19.1-sources.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-ie-driver-4.19.1-sources.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-json-4.19.1-sources.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-manager-4.19.1-sources.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-os-4.19.1-sources.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-remote-driver-4.19.1-sources.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-safari-driver-4.19.1-sources.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-support-4.19.1-sources.jar!/" />
+        </SOURCES>
+        <jarDirectory url="file://$USER_HOME$/Downloads/selenium-java-4/lib" recursive="false" />
+      </library>
+    </orderEntry>
   </component>
 </module>

@@ -10,16 +10,16 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class PageRanking {
-    private List<Map<String, Object>> pages;
-    private final Map<String, Set<Integer>> invertedIndex;
+public class PageRanking_and_invertedIndexing {
+    private List<Map<String, Object>> pages; // List to store pages
+    private final Map<String, Set<Integer>> invertedIndex; // Inverted index for efficient keyword search
 
-    public PageRanking() {
-
-        pages = new ArrayList<>();
-        invertedIndex = new HashMap<>();
+    public PageRanking_and_invertedIndexing() {
+        pages = new ArrayList<>(); // Initialize list of pages
+        invertedIndex = new HashMap<>(); // Initialize inverted index
     }
 
+    // Method to read pages from JSON file
     public void readPages(String filename) {
         JSONParser parser = new JSONParser();
 
@@ -35,14 +35,14 @@ public class PageRanking {
                 page.put("transmission", jsonObject.get("transmission"));
                 page.put("image", jsonObject.get("image"));
                 page.put("kms", jsonObject.get("kms"));
-                pages.add(page);
+                pages.add(page); // Add page to the list
             }
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
     }
 
-    // Rank pages by price
+    // Rank pages by price within the specified range
     public void rankByPrice(int minPrice, int maxPrice) {
         List<Map<String, Object>> filteredPages = new ArrayList<>();
         for (Map<String, Object> page : pages) {
@@ -51,14 +51,17 @@ public class PageRanking {
                 filteredPages.add(page);
             }
         }
+        // Sort filtered pages by price in increasing order
         filteredPages.sort(Comparator.comparingInt(p -> Integer.parseInt(p.get("price").toString())));
-        pages = filteredPages;
+        pages = filteredPages; // Update pages with filtered and sorted pages
     }
 
+    // Rank pages by transmission type
     public void rankByTransmission(int selectionTransmissionType) {
         String[] transmissionTypes = {"Automatic", "NA", "Manual"};
         String selectedTransmission = transmissionTypes[selectionTransmissionType - 1];
 
+        // Filter pages by selected transmission type
         List<Map<String, Object>> filteredPages = new ArrayList<>();
         for (Map<String, Object> page : pages) {
             String transmission = page.get("transmission").toString();
@@ -66,13 +69,15 @@ public class PageRanking {
                 filteredPages.add(page);
             }
         }
-        pages = filteredPages;
+        pages = filteredPages; // Update pages with filtered pages
     }
 
+    // Rank pages by fuel type
     public void rankByFuelType(int selectionFuelType) {
         String[] fuelTypes = {"Gas", "Diesel", "Electric", "Hybrid", "Other"};
         String selectedFuelType = fuelTypes[selectionFuelType - 1];
 
+        // Filter pages by selected fuel type
         List<Map<String, Object>> filteredPages = new ArrayList<>();
         for (Map<String, Object> page : pages) {
             String fuelType = page.get("fuelType").toString();
@@ -80,11 +85,12 @@ public class PageRanking {
                 filteredPages.add(page);
             }
         }
-        pages = filteredPages;
+        pages = filteredPages; // Update pages with filtered pages
     }
 
     // Rank pages by image availability
     public void rankByImageAvailability() {
+        // Sort pages by image availability
         Collections.sort(pages, (p1, p2) -> {
             String imageUrl1 = p1.get("image") != null ? p1.get("image").toString() : "";
             String imageUrl2 = p2.get("image") != null ? p2.get("image").toString() : "";
@@ -94,11 +100,13 @@ public class PageRanking {
 
     // Rank pages by kilometers driven
     public void rankByKmsDriven() {
+        // Sort pages by kilometers driven
         Collections.sort(pages, Comparator.comparingInt(p -> Integer.parseInt(p.get("kms").toString())));
     }
 
-    // Rank pages by name
+    // Rank pages by name containing the specified search name
     public void rankByName(String searchName) {
+        // Sort pages by name containing the search name
         Collections.sort(pages, (p1, p2) -> {
             String name1 = p1.get("name").toString();
             String name2 = p2.get("name").toString();
@@ -114,17 +122,19 @@ public class PageRanking {
         });
     }
 
+    // Method to print ranked pages
     public void printRankedPages() {
         for (Map<String, Object> page : pages) {
             System.out.println("Name: " + page.get("name") + ", Price: " + page.get("price"));
         }
     }
 
+    // Method to get ranked pages
     public List<Map<String, Object>> getRankedPages() {
         return pages;
     }
 
-    // Build inverted index
+    // Method to build inverted index for efficient keyword search
     void buildInvertedIndex() {
         for (int i = 0; i < pages.size(); i++) {
             Map<String, Object> page = pages.get(i);
@@ -138,7 +148,7 @@ public class PageRanking {
         }
     }
 
-    // Perform search using inverted index
+    // Method to perform search using inverted index
     public List<Map<String, Object>> searchByKeyword(String keyword) {
         if (!invertedIndex.containsKey(keyword.toLowerCase())) {
             return Collections.emptyList();
@@ -152,6 +162,7 @@ public class PageRanking {
         return result;
     }
 
+    // Method to filter pages within the specified price range
     public List<Map<String, Object>> getPagesInPriceRange(int minPrice, int maxPrice) {
         List<Map<String, Object>> filteredPages = new ArrayList<>();
         for (Map<String, Object> page : pages) {
@@ -163,7 +174,7 @@ public class PageRanking {
         return filteredPages;
     }
 
-    // New method to filter pages within the specified kms range
+    // Method to filter pages within the specified kms range
     public List<Map<String, Object>> getPagesInKmsRange(int minKms, int maxKms) {
         List<Map<String, Object>> filteredPages = new ArrayList<>();
         for (Map<String, Object> page : pages) {
@@ -175,24 +186,21 @@ public class PageRanking {
         return filteredPages;
     }
 
-    public List<Map<String, Object>> getPagesByTransmission(int selectionTransmissionType) {
-        String[] transmissionTypes = {"Automatic", "NA", "Manual"};
-        String selectedTransmission = transmissionTypes[selectionTransmissionType - 1];
-
+    // Method to filter pages by transmission type
+    public List<Map<String, Object>> getPagesByTransmission(String selectedTransmission) {
         return pages.stream()
                 .filter(page -> page.get("transmission").toString().equalsIgnoreCase(selectedTransmission))
                 .collect(Collectors.toList());
     }
 
-    public List<Map<String, Object>> getPagesByFuelType(int selectionFuelType) {
-        String[] fuelTypes = {"Gas", "Diesel", "Electric", "Hybrid", "Other"};
-        String selectedFuelType = fuelTypes[selectionFuelType - 1];
-
+    // Method to filter pages by fuel type
+    public List<Map<String, Object>> getPagesByFuelType(String selectedFuelType) {
         return pages.stream()
                 .filter(page -> page.get("fuelType").toString().equalsIgnoreCase(selectedFuelType))
                 .collect(Collectors.toList());
     }
 
+    // Method to filter pages with image availability
     public List<Map<String, Object>> getPagesWithImage() {
         return pages.stream()
                 .filter(page -> page.get("image") != null)
