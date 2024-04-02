@@ -46,7 +46,7 @@ public class Driver {
 
         bagOfWords.addAll(Utils.generateBagOfWords(listCars));
 
-        CustomPrint.println(listCars);
+//        CustomPrint.println(listCars);
 
         WordCompletion.insertWordsForCompletion(bagOfWords);
 

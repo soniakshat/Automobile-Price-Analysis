@@ -157,17 +157,17 @@ public class HtmlParsing {
 //                            Image: \{imageUrl}
 //
 //                            """);
-
+//
 //                    Car car = new Car(name, Integer.parseInt(price), fType, tType, Integer.parseInt(kilometers), imageUrl);
 //                    cars.add(car);
                 }
 
-                JSONArray jsonArray = new JSONArray();
-                for (Car car : cars) {
-                    jsonArray.put(car.getJsonObject());
-                }
-
-                Utils.createJsonFile(jsonCacheFileName, jsonArray);
+//                JSONArray jsonArray = new JSONArray();
+//                for (Car car : cars) {
+//                    jsonArray.put(car.getJsonObject());
+//                }
+//
+//                Utils.createJsonFile(jsonCacheFileName, jsonArray);
 
             } catch (org.json.JSONException e) {
                 System.err.println("An error occurred while processing JSON: " + e.getMessage());
@@ -184,8 +184,6 @@ public class HtmlParsing {
 
         String jsonPath = jsonCacheFolderPath + jsonCacheFileName;
         String htmlFilePath = htmlCacheFolderPath + htmlCacheFileName;
-
-        List<Car> dashMotorsCars = new ArrayList<>();
 
         if (!Utils.isUrlValid(url)) {
             CustomPrint.printError("Jsoup Parser", STR."Invalid Url to parse: \{url}");
