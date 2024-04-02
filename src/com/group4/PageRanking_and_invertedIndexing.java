@@ -42,68 +42,6 @@ public class PageRanking_and_invertedIndexing {
         }
     }
 
-    // Rank pages by price within the specified range
-    public void rankByPrice(int minPrice, int maxPrice) {
-        List<Map<String, Object>> filteredPages = new ArrayList<>();
-        for (Map<String, Object> page : pages) {
-            int price = Integer.parseInt(page.get("price").toString());
-            if (price >= minPrice && price <= maxPrice) {
-                filteredPages.add(page);
-            }
-        }
-        // Sort filtered pages by price in increasing order
-        filteredPages.sort(Comparator.comparingInt(p -> Integer.parseInt(p.get("price").toString())));
-        pages = filteredPages; // Update pages with filtered and sorted pages
-    }
-
-    // Rank pages by transmission type
-    public void rankByTransmission(int selectionTransmissionType) {
-        String[] transmissionTypes = {"Automatic", "NA", "Manual"};
-        String selectedTransmission = transmissionTypes[selectionTransmissionType - 1];
-
-        // Filter pages by selected transmission type
-        List<Map<String, Object>> filteredPages = new ArrayList<>();
-        for (Map<String, Object> page : pages) {
-            String transmission = page.get("transmission").toString();
-            if (transmission.equalsIgnoreCase(selectedTransmission)) {
-                filteredPages.add(page);
-            }
-        }
-        pages = filteredPages; // Update pages with filtered pages
-    }
-
-    // Rank pages by fuel type
-    public void rankByFuelType(int selectionFuelType) {
-        String[] fuelTypes = {"Gas", "Diesel", "Electric", "Hybrid", "Other"};
-        String selectedFuelType = fuelTypes[selectionFuelType - 1];
-
-        // Filter pages by selected fuel type
-        List<Map<String, Object>> filteredPages = new ArrayList<>();
-        for (Map<String, Object> page : pages) {
-            String fuelType = page.get("fuelType").toString();
-            if (fuelType.equalsIgnoreCase(selectedFuelType)) {
-                filteredPages.add(page);
-            }
-        }
-        pages = filteredPages; // Update pages with filtered pages
-    }
-
-    // Rank pages by image availability
-    public void rankByImageAvailability() {
-        // Sort pages by image availability
-        Collections.sort(pages, (p1, p2) -> {
-            String imageUrl1 = p1.get("image") != null ? p1.get("image").toString() : "";
-            String imageUrl2 = p2.get("image") != null ? p2.get("image").toString() : "";
-            return imageUrl1.compareTo(imageUrl2);
-        });
-    }
-
-    // Rank pages by kilometers driven
-    public void rankByKmsDriven() {
-        // Sort pages by kilometers driven
-        Collections.sort(pages, Comparator.comparingInt(p -> Integer.parseInt(p.get("kms").toString())));
-    }
-
     // Rank pages by name containing the specified search name
     public void rankByName(String searchName) {
         // Sort pages by name containing the search name
@@ -120,13 +58,6 @@ public class PageRanking_and_invertedIndexing {
                 return name1.compareToIgnoreCase(name2);
             }
         });
-    }
-
-    // Method to print ranked pages
-    public void printRankedPages() {
-        for (Map<String, Object> page : pages) {
-            System.out.println("Name: " + page.get("name") + ", Price: " + page.get("price"));
-        }
     }
 
     // Method to get ranked pages
