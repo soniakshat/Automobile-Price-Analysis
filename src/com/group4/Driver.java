@@ -459,20 +459,20 @@ public class Driver {
         if (files != null) { // Check if there are JSON files in the directory
             for (File file : files) { // Iterate through each JSON file
                 try {
-                    PageRanking_and_invertedIndexing pageRankingAndinvertedIndexing = new PageRanking_and_invertedIndexing(); // Create a PageRanking object
-                    pageRankingAndinvertedIndexing.readPages(file.getAbsolutePath()); // Read pages from the JSON file
+                    PageRanking_and_invertedIndexing pageRanking = new PageRanking_and_invertedIndexing(); // Create a PageRanking_and_invertedIndexing object
+                    pageRanking.readPages(file.getAbsolutePath()); // Read pages from the JSON file
 
                     switch (searchMethod) {
                         case "name" -> {
-                            pageRankingAndinvertedIndexing.rankByName(strValueParam); // Rank pages by name containing the specified search name
-                            pageRankingAndinvertedIndexing.buildInvertedIndex(); // Build inverted index for efficient keyword search
-                            List<Map<String, Object>> filteredPages = pageRankingAndinvertedIndexing.searchByKeyword(strValueParam); // Search pages by keyword
+                            pageRanking.rankByName(strValueParam); // Rank pages by name containing the specified search name
+                            pageRanking.buildInvertedIndex(); // Build inverted index for efficient keyword search
+                            List<Map<String, Object>> filteredPages = pageRanking.searchByKeyword(strValueParam); // Search pages by keyword
                             allRankedPages.addAll(filteredPages); // Add filtered pages to the list
                         }
                         case "price" -> {
                             int minPrice = intValueParam != null ? intValueParam : 0; // Minimum price parameter
                             int maxPrice = strValueParam != null ? Integer.parseInt(strValueParam) : Integer.MAX_VALUE; // Maximum price parameter
-                            List<Map<String, Object>> filteredPages = pageRankingAndinvertedIndexing.getPagesInPriceRange(minPrice, maxPrice); // Filter pages by price range
+                            List<Map<String, Object>> filteredPages = pageRanking.getPagesInPriceRange(minPrice, maxPrice); // Filter pages by price range
 
                             // Sort filtered pages by price in increasing order
                             filteredPages.sort(Comparator.comparingInt(p -> Integer.parseInt(p.get("price").toString())));
@@ -482,21 +482,21 @@ public class Driver {
                         case "kms" -> {
                             int minKms = intValueParam != null ? intValueParam : 0; // Minimum kms parameter
                             int maxKms = strValueParam != null ? Integer.parseInt(strValueParam) : Integer.MAX_VALUE; // Maximum kms parameter
-                            List<Map<String, Object>> filteredPages = pageRankingAndinvertedIndexing.getPagesInKmsRange(minKms, maxKms); // Filter pages by kms range
+                            List<Map<String, Object>> filteredPages = pageRanking.getPagesInKmsRange(minKms, maxKms); // Filter pages by kms range
                             allRankedPages.addAll(filteredPages); // Add filtered pages to the list
                         }
                         case "transmission" -> {
                             int selectionTransmissionType = intValueParam != null ? intValueParam : 0; // Transmission type parameter
-                            List<Map<String, Object>> filteredPages = pageRankingAndinvertedIndexing.getPagesByTransmission(String.valueOf(selectionTransmissionType)); // Filter pages by transmission type
+                            List<Map<String, Object>> filteredPages = pageRanking.getPagesByTransmission(String.valueOf(selectionTransmissionType)); // Filter pages by transmission type
                             allRankedPages.addAll(filteredPages); // Add filtered pages to the list
                         }
                         case "fuelType" -> {
                             int selectionFuelType = intValueParam != null ? intValueParam : 0; // Fuel type parameter
-                            List<Map<String, Object>> filteredPages = pageRankingAndinvertedIndexing.getPagesByFuelType(String.valueOf(selectionFuelType)); // Filter pages by fuel type
+                            List<Map<String, Object>> filteredPages = pageRanking.getPagesByFuelType(String.valueOf(selectionFuelType)); // Filter pages by fuel type
                             allRankedPages.addAll(filteredPages); // Add filtered pages to the list
                         }
                         case "image" -> {
-                            List<Map<String, Object>> filteredPages = pageRankingAndinvertedIndexing.getPagesWithImage(); // Filter pages with image availability
+                            List<Map<String, Object>> filteredPages = pageRanking.getPagesWithImage(); // Filter pages with image availability
                             allRankedPages.addAll(filteredPages); // Add filtered pages to the list
                         }
                     }
