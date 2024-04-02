@@ -56,8 +56,17 @@ public class Driver {
 
             switch (choice) {
                 case Name -> {
-                    CustomPrint.print("Enter a car name to search: ");
-                    String carName = new Scanner(System.in).nextLine().toLowerCase();
+
+                    Scanner carScanner = new Scanner(System.in);
+                    String carName = "";
+                    try {
+                        CustomPrint.print("Enter a car name to search: ");
+                        carName = carScanner.next();
+                    } catch (InputMismatchException e) {
+                        CustomPrint.printError("Invalid input. Please enter a correct choice:");
+                        carScanner.next();
+                        carName = carScanner.next(); // Discard the invalid input and wait for a new input
+                    }
                     String suggestedCarName = SpellChecking.checkSpelling(carName);
 
                     if (!suggestedCarName.equalsIgnoreCase(carName)) {
@@ -67,7 +76,7 @@ public class Driver {
                             CustomPrint.print("Do you want to search for suggested name? [y/n]:  ");
                             selection = scanner.next();
                         } catch (InputMismatchException e) {
-                            CustomPrint.printError( "Invalid input. Please enter a correct choice:");
+                            CustomPrint.printError("Invalid input. Please enter a correct choice:");
                             scanner.next();
                             selection = scanner.next(); // Discard the invalid input and wait for a new input
                         }
@@ -150,7 +159,7 @@ public class Driver {
                         CustomPrint.print("Maximum Price: ");
                         maxPrice = scanner1.nextInt();
                     } catch (InputMismatchException e) {
-                        CustomPrint.printError( "Invalid input. Please enter a correct choice:");
+                        CustomPrint.printError("Invalid input. Please enter a correct choice:");
                         scanner1.next();
                         maxPrice = scanner1.nextInt(); // Discard the invalid input and wait for a new input
                     }
@@ -182,7 +191,7 @@ public class Driver {
                         CustomPrint.print("Maximum Kms: ");
                         maxKms = scanner1.nextInt();
                     } catch (InputMismatchException e) {
-                        CustomPrint.printError( "Invalid input. Please enter a correct choice:");
+                        CustomPrint.printError("Invalid input. Please enter a correct choice:");
                         scanner1.next();
                         maxKms = scanner1.nextInt(); // Discard the invalid input and wait for a new input
                     }
@@ -202,17 +211,17 @@ public class Driver {
                 }
                 case Stats -> {
                     CustomPrint.println("Search Stats are as follows:\n");
-                    CustomPrint.println("Search By Name");
+                    CustomPrint.println("\nSearch By Name");
                     trackNameSearch.displaySearchFrequency();
 
-                    Utils.delay(500);
+                    Utils.delay(1500);
 
-                    CustomPrint.println("Search By Fuel");
+                    CustomPrint.println("\nSearch By Fuel");
                     trackFuelSearch.displaySearchFrequency();
 
-                    Utils.delay(500);
+                    Utils.delay(1500);
 
-                    CustomPrint.println("Search By Transmission");
+                    CustomPrint.println("\nSearch By Transmission");
                     trackTransmissionSearch.displaySearchFrequency();
 //
                 }
@@ -225,6 +234,7 @@ public class Driver {
                     CustomPrint.println("Regathering data...");
                     listCars.addAll(HtmlParsing.crawlListCars());
                     bagOfWords.addAll(Utils.generateBagOfWords(listCars));
+                    CustomPrint.println("Data refreshed!");
                 }
                 case null, default -> {
                     CustomPrint.print("Please select a valid choice: ");
@@ -389,6 +399,9 @@ public class Driver {
         List<Car> listRequiredCars = new ArrayList<>();
         for (Car car : listCars) {
             String imageUrl = car.getImageUrl();
+            if (!Utils.isUrlValid(imageUrl)) {
+                continue;
+            }
             if (imageUrl != null && !imageUrl.isBlank()) {
                 listRequiredCars.add(car);
             }
@@ -404,9 +417,9 @@ public class Driver {
      * It reads JSON files from the current directory, ranks and filters pages according to the specified criteria,
      * and prints the filtered ranked pages.
      *
-     * @param searchMethod   The method to be used for ranking and filtering (e.g., "name", "price", "kms", etc.).
-     * @param intValueParam  Integer parameter for filtering (e.g., minimum price, minimum kms, transmission type, fuel type).
-     * @param strValueParam  String parameter for filtering (e.g., name to search, maximum price).
+     * @param searchMethod  The method to be used for ranking and filtering (e.g., "name", "price", "kms", etc.).
+     * @param intValueParam Integer parameter for filtering (e.g., minimum price, minimum kms, transmission type, fuel type).
+     * @param strValueParam String parameter for filtering (e.g., name to search, maximum price).
      */
     private static void jsonProcessing_pageRanking_and_invertedIndexing(String searchMethod, Integer intValueParam, String strValueParam) {
         List<Map<String, Object>> allRankedPages = new ArrayList<>(); // List to store all filtered ranked pages
@@ -491,8 +504,6 @@ public class Driver {
         CustomPrint.println("6. Show search stats");
         CustomPrint.println("7. Delete Cache and Refresh Data");
         CustomPrint.println("8. Exit from program\n");
-
-        CustomPrint.println("Please enter your choice");
 
         Scanner scanner = new Scanner(System.in);
         int choice = -1;

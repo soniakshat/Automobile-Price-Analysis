@@ -55,6 +55,9 @@ public class HtmlParsing {
                     String name = listing.select("h2.eziVehicleName a").text();
 
                     String imageUrl = listing.select("div.veh-img-placeholder img.img-list-respnsive").attr("src");
+                    if(!Utils.isUrlValid(imageUrl)) {
+                        imageUrl = "NA";
+                    }
 
                     String price = listing.select("span.eziPriceValue").text();
                     price = price.replaceAll("\\D", "");
@@ -131,15 +134,19 @@ public class HtmlParsing {
                     String name = carElement.select("h2.fcN7dZ").text();
 
                     String imageUrl = carElement.select("figure[data-testid=VehicleListItem-figure] img").attr("src");
+                    if(!Utils.isUrlValid(imageUrl)) {
+                        imageUrl = "NA";
+                    }
+                    String price = carElement.select("div.g3uM7V[data-testid=VehicleListItem-price] span[data-testid=searchResultItemPrice]").first().text().replaceAll("\\*$", "");
+                    price = price.replaceAll("\\D", "");
+                    price = price.isEmpty() ? "-1" : price;
 
-                    String price = carElement.select("div.g3uM7V[data-testid=VehicleListItem-price] span[data-testid=searchResultItemPrice]")first().text().replaceAll("\\*$", "");
-//                    price = price.replaceAll("\\D", "");
-//                    price = price.isEmpty() ? "-1" : price;
 
                     Elements details = carElement.select("ul.b3n44x li span[data-testid=VehicleListItemAttributeValue]");
 
-                    String kilometers = details.size() > 0 ? details.get(0).text().replaceAll("\\D", "") : "N/A";
-
+                    String kilometers = details.size() > 0 ? details.get(0).text().replaceAll("\\D", "") : "-1";
+                    kilometers = kilometers.isEmpty() || kilometers == null ? "-1" : kilometers;
+CustomPrint.print("Kms: "+kilometers);
 //                    String location = details.size() > 1 ? details.get(1).text() : "N/A";
 
                     String transmissionType = details.size() > 2 ? details.get(2).text() : "N/A";
@@ -148,26 +155,27 @@ public class HtmlParsing {
                     FuelType fType = getFuel(fuelType);
                     TransmissionType tType = getTransmission(transmissionType);
 
-//                    CustomPrint.println(STR."""
-//
-//                            Name: \{name}
-//                            Price: \{price}
-//                            Transmission: \{transmissionType}
-//                            Fuel: \{fuelType}
-//                            Image: \{imageUrl}
-//
-//                            """);
-//
-//                    Car car = new Car(name, Integer.parseInt(price), fType, tType, Integer.parseInt(kilometers), imageUrl);
-//                    cars.add(car);
+                    CustomPrint.println(STR."""
+
+                            Name: \{name}
+                            Price: \{price}
+                            Transmission: \{transmissionType}
+                            Fuel: \{fuelType}
+                            Image: \{imageUrl}
+                            Kilometer: \{kilometers}
+
+                            """);
+
+                    Car car = new Car(name, Integer.parseInt(price), fType, tType, Integer.parseInt(kilometers), imageUrl);
+                    cars.add(car);
                 }
 
-//                JSONArray jsonArray = new JSONArray();
-//                for (Car car : cars) {
-//                    jsonArray.put(car.getJsonObject());
-//                }
-//
-//                Utils.createJsonFile(jsonCacheFileName, jsonArray);
+                JSONArray jsonArray = new JSONArray();
+                for (Car car : cars) {
+                    jsonArray.put(car.getJsonObject());
+                }
+
+                Utils.createJsonFile(jsonCacheFileName, jsonArray);
 
             } catch (org.json.JSONException e) {
                 System.err.println("An error occurred while processing JSON: " + e.getMessage());
@@ -177,6 +185,7 @@ public class HtmlParsing {
 
     static void CrawlChrysler() {
         String url = "https://www.motorcitychrysler.ca/used/";
+
         String webSiteName = url.replaceAll(".*www\\.(.*?)\\..*", "$1");
 
         String htmlCacheFileName = STR."Cache_\{webSiteName}.html";
@@ -211,7 +220,9 @@ public class HtmlParsing {
                     String name = carListing.select("span[itemprop=model]").text();
 
                     String imageUrl = carListing.select("img[itemprop=image]").attr("src");
-
+                    if(!Utils.isUrlValid(imageUrl)) {
+                        imageUrl = "NA";
+                    }
                     String price = carListing.select("span[itemprop=price]").text();
                     price = price.replaceAll("\\D", "");
                     price = price.isEmpty() ? "-1" : price;

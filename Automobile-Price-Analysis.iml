@@ -10,33 +10,6 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/Downloads/json-20240303.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$USER_HOME$/Downloads/jsoup-1.17.2.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$USER_HOME$/Downloads/json-simple-1.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="file://$USER_HOME$/Downloads/selenium-java-4/lib" />
           <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-api-4.19.1.jar!/" />
           <root url="jar://$USER_HOME$/Downloads/selenium-java-4/selenium-chrome-driver-4.19.1.jar!/" />
@@ -80,5 +53,8 @@
         <jarDirectory url="file://$USER_HOME$/Downloads/selenium-java-4/lib" recursive="false" />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="json" level="application" />
+    <orderEntry type="library" name="json-simple-1.1" level="application" />
+    <orderEntry type="library" name="jsoup" level="application" />
   </component>
 </module>

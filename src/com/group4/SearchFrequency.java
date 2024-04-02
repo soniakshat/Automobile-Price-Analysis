@@ -25,7 +25,8 @@ public class SearchFrequency {
 
     // Method to display search frequency for all words
     public void displaySearchFrequency() {
-        System.out.println("Search Frequency:");
+//        System.out.println("Search Frequency:");
+//        frequencyCount.topKWords(3);
         for (Map.Entry<String, Integer> entry : searchFrequency.entrySet()) {
             System.out.println(STR."\{entry.getKey()}: \{entry.getValue()}");
         }
