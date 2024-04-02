@@ -11,7 +11,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class PageRanking_and_invertedIndexing {
-    private List<Map<String, Object>> pages; // List to store pages
+    private final List<Map<String, Object>> pages; // List to store pages
     private final Map<String, Set<Integer>> invertedIndex; // Inverted index for efficient keyword search
 
     public PageRanking_and_invertedIndexing() {
@@ -26,8 +26,8 @@ public class PageRanking_and_invertedIndexing {
         try {
             JSONArray jsonArray = (JSONArray) parser.parse(new FileReader(filename));
 
-            for (int i = 0; i < jsonArray.size(); i++) {
-                JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+            for (Object o : jsonArray) {
+                JSONObject jsonObject = (JSONObject) o;
                 Map<String, Object> page = new HashMap<>();
                 page.put("name", jsonObject.get("name"));
                 page.put("price", jsonObject.get("price"));
@@ -45,7 +45,7 @@ public class PageRanking_and_invertedIndexing {
     // Rank pages by name containing the specified search name
     public void rankByName(String searchName) {
         // Sort pages by name containing the search name
-        Collections.sort(pages, (p1, p2) -> {
+        pages.sort((p1, p2) -> {
             String name1 = p1.get("name").toString();
             String name2 = p2.get("name").toString();
             boolean containsName1 = name1.toLowerCase().contains(searchName.toLowerCase());
@@ -60,17 +60,12 @@ public class PageRanking_and_invertedIndexing {
         });
     }
 
-    // Method to get ranked pages
-    public List<Map<String, Object>> getRankedPages() {
-        return pages;
-    }
-
     // Method to build inverted index for efficient keyword search
     void buildInvertedIndex() {
         for (int i = 0; i < pages.size(); i++) {
             Map<String, Object> page = pages.get(i);
             String name = page.get("name").toString().toLowerCase();
-            List<String> keywords = Arrays.asList(name.split("\\s+"));
+            String[] keywords = name.split("\\s+");
 
             for (String keyword : keywords) {
                 invertedIndex.putIfAbsent(keyword, new HashSet<>());
