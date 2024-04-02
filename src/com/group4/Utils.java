@@ -14,7 +14,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class Utils {
-    public static String[] CrawlUrls = {"https://www.motorcitychrysler.ca/used/", "https://www.kijijiautos.ca/cars/#od=down&sb=rel", "https://www.dashmotors.ca/inventory"};;
+    public static String[] CrawlUrls = {"https://www.motorcitychrysler.ca/used/", "https://www.kijijiautos.ca/cars/#od=down&sb=rel", "https://www.dashmotors.ca/inventory"};
+    ;
 
     public enum SearchType {
         Name,
@@ -63,12 +64,14 @@ public class Utils {
 
     /**
      * Generates a bag of words from provided List of Car
+     *
      * @param carList List of Car objects
      * @author Akshat Soni
-     * */
+     */
     public static List<String> generateBagOfWords(List<Car> carList) {
         // Returns if the input is null or empty
         if (carList == null || carList.isEmpty()) {
+            CustomPrint.printError("Car list empty or null");
             return null;
         }
         StringBuilder carData = new StringBuilder();
@@ -84,7 +87,6 @@ public class Utils {
 
         // Creating a words array to store each word from the clean text
         List<String> words = Arrays.stream(data.split("\\s+")).toList();
-
         return words;
     }
 
@@ -167,10 +169,11 @@ public class Utils {
 
     /**
      * Reads the json file and provides a string
+     *
      * @param path path to json file
      * @return string of the data of json file
      * @author Akshat Soni
-     * */
+     */
     public static String readJsonFile(String path) {
         String jsonData = "";
         try {
@@ -183,9 +186,10 @@ public class Utils {
 
     /**
      * Deletes all folder from the provided path
+     *
      * @param folderPath path of folder to be deleted
      * @author Akshat Soni
-     * */
+     */
     public static void deleteAllFilesInFolder(String folderPath) {
         Path folder = Paths.get(folderPath);
         if (!Files.exists(folder) || !Files.isDirectory(folder)) {
@@ -211,8 +215,9 @@ public class Utils {
 
     /**
      * Checks if the jsonFile exists or not
+     *
      * @author Akshat Soni
-     * */
+     */
     public static boolean isJsonFileExists(String fileName) {
         File file = new File(Utils.jsonCacheFolder + fileName);
         return file.exists() && file.isFile() && file.getName().endsWith(".json");
@@ -220,10 +225,11 @@ public class Utils {
 
     /**
      * Creates a json file on provided
-     * @param fileName name of json file to be created
+     *
+     * @param fileName  name of json file to be created
      * @param jsonArray json array which is to be stored in json file
      * @author Akshat Soni
-     * */
+     */
     public static void createJsonFile(String fileName, JSONArray jsonArray) {
         File file = new File(jsonCacheFolder + fileName);
         try (FileWriter fileWriter = new FileWriter(file)) {
@@ -238,7 +244,7 @@ public class Utils {
                     writer.write(jsonArray.toString(4));
                     fileWriter.flush();
                 }
-                CustomPrint.println("Selenium Json", STR."Json Data of Cars Saved: \{fileName}");
+                CustomPrint.println("Json", STR."Json Data of Cars Saved: \{fileName}");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -247,10 +253,11 @@ public class Utils {
 
     /**
      * reads a json file for array of car objects from provided path
+     *
      * @param filePath path to the json flie
      * @return list of car objects
      * @author Akshat Soni
-     * */
+     */
     public static List<Car> readJsonFileToCarList(String filePath) {
         List<Car> carList = new ArrayList<>();
 

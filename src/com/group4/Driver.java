@@ -1,12 +1,10 @@
 package com.group4;
 
-import static java.lang.StringTemplate.STR;
-
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.io.File;
 import java.util.*;
 
 /**
@@ -15,9 +13,8 @@ import java.util.*;
  * @author Akshat Soni
  */
 public class Driver {
-    public static final Set<String> bagOfWords = new HashSet<>();
+    public static Set<String> bagOfWords = new HashSet<>();
     private static final List<Car> listCars = new ArrayList<>();
-
     private static final SearchFrequency trackNameSearch = new SearchFrequency();
     private static final SearchFrequency trackFuelSearch = new SearchFrequency();
     private static final SearchFrequency trackTransmissionSearch = new SearchFrequency();
@@ -33,20 +30,23 @@ public class Driver {
      */
     private static void advanceIntegration() {
 
-        CustomPrint.println("=".repeat(30));
-
-        CustomPrint.println("Instructions", """
-                This program will give you information about a car by crawling below mentioned websites.
+        String instruction = "This program will give you information about a car by crawling below mentioned websites.";
+        CustomPrint.println("=".repeat(instruction.length()+18));
+        CustomPrint.println("Instructions", STR."""
+                \{instruction}
+                                                        _______
+                                                       //  ||\\ \\
+                                                 _____//___||_\\ \\___
+                                                 )  _          _    \\
+                                                 |_/ \\________/ \\___|
+                                                ___\\_/________\\_/______
                 """);
 
-
-        CustomPrint.println("=".repeat(30));
+        CustomPrint.println("=".repeat(instruction.length()+18));
 
         listCars.addAll(HtmlParsing.crawlListCars());
 
         bagOfWords.addAll(Utils.generateBagOfWords(listCars));
-
-//        CustomPrint.println(listCars);
 
         WordCompletion.insertWordsForCompletion(bagOfWords);
 
@@ -114,7 +114,14 @@ public class Driver {
                         selectionFuelType = scanner.nextInt(); // Discard the invalid input and wait for a new input
                     }
 
-                    FuelType fuel = FuelType.values()[selectionFuelType - 1];
+                    FuelType fuel;
+                    if (selectionFuelType < 1 || selectionFuelType > FuelType.values().length) {
+                        CustomPrint.printError("Invalid Fuel Data");
+                      break;
+                    } else {
+                        fuel = FuelType.values()[selectionFuelType - 1];
+                    }
+
                     getCarByFuelType(selectionFuelType);
                     trackFuelSearch.trackSearch(fuel.name());
                 }
@@ -134,7 +141,14 @@ public class Driver {
                         scanner.next();
                         selectionTransmissionType = scanner.nextInt(); // Discard the invalid input and wait for a new input
                     }
-                    TransmissionType transmission = TransmissionType.values()[selectionTransmissionType - 1];
+                    TransmissionType transmission;
+
+                    if (selectionTransmissionType < 1 || selectionTransmissionType > TransmissionType.values().length) {
+                        CustomPrint.printError("Invalid Transmission Data");
+                        break;
+                    } else {
+                     transmission=   TransmissionType.values()[selectionTransmissionType - 1];
+                    }
                     getCarByTransmission(selectionTransmissionType);
                     trackTransmissionSearch.trackSearch(transmission.name());
                 }
@@ -225,17 +239,17 @@ public class Driver {
                     trackTransmissionSearch.displaySearchFrequency();
 //
                 }
-                case DeleteCacheAndRefreshData -> {
-                    CustomPrint.println("Deleting Cache...");
-                    Utils.deleteAllFilesInFolder(Utils.jsonCacheFolder);
-                    Utils.deleteAllFilesInFolder(Utils.htmlCacheFolder);
-                    listCars.clear();
-                    bagOfWords.clear();
-                    CustomPrint.println("Regathering data...");
-                    listCars.addAll(HtmlParsing.crawlListCars());
-                    bagOfWords.addAll(Utils.generateBagOfWords(listCars));
-                    CustomPrint.println("Data refreshed!");
-                }
+//                case DeleteCacheAndRefreshData -> {
+//                    CustomPrint.println("Deleting Cache...");
+//                    Utils.deleteAllFilesInFolder(Utils.jsonCacheFolder);
+//                    Utils.deleteAllFilesInFolder(Utils.htmlCacheFolder);
+//                    listCars.clear();
+//                    bagOfWords.clear();
+//                    CustomPrint.println("Regathering data...");
+//                    listCars.addAll(HtmlParsing.crawlListCars());
+//                    bagOfWords.addAll(Utils.generateBagOfWords(listCars));
+//                    CustomPrint.println("Data refreshed!");
+//                }
                 case null, default -> {
                     CustomPrint.print("Please select a valid choice: ");
                 }
@@ -303,9 +317,16 @@ public class Driver {
         List<Car> listRequiredCars = new ArrayList<>();
         for (Car car : listCars) {
             TransmissionType carTransmissionType = car.getTransmissionType();
-            if (carTransmissionType == TransmissionType.values()[selectionTransmissionType - 1]) {
-                listRequiredCars.add(car);
+            if (selectionTransmissionType < 1 || selectionTransmissionType > TransmissionType.values().length) {
+                CustomPrint.printError("Invalid Transmission Data");
+                return;
+            } else {
+                TransmissionType transmissionType = TransmissionType.values()[selectionTransmissionType - 1];
+                if (carTransmissionType == transmissionType) {
+                    listRequiredCars.add(car);
+                }
             }
+
         }
         for (Car car : listRequiredCars) {
             CustomPrint.println(car);
@@ -323,6 +344,15 @@ public class Driver {
         List<Car> listRequiredCars = new ArrayList<>();
         for (Car car : listCars) {
             FuelType carFuelType = car.getFuelType();
+            if (selectionFuelType < 1 || selectionFuelType > TransmissionType.values().length) {
+                CustomPrint.printError("Invalid Fuel Data");
+                return;
+            } else {
+                FuelType transmissionType = FuelType.values()[selectionFuelType - 1];
+                if (carFuelType == transmissionType) {
+                    listRequiredCars.add(car);
+                }
+            }
             if (carFuelType == FuelType.values()[selectionFuelType - 1]) {
                 listRequiredCars.add(car);
             }
@@ -423,7 +453,7 @@ public class Driver {
      */
     private static void jsonProcessing_pageRanking_and_invertedIndexing(String searchMethod, Integer intValueParam, String strValueParam) {
         List<Map<String, Object>> allRankedPages = new ArrayList<>(); // List to store all filtered ranked pages
-        File folder = new File("./"); // Current directory
+        File folder = new File(Utils.jsonCacheFolder); // Current directory
         File[] files = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".json")); // List of JSON files in the directory
 
         if (files != null) { // Check if there are JSON files in the directory
@@ -502,8 +532,8 @@ public class Driver {
         CustomPrint.println("4. Search by fuel");
         CustomPrint.println("5. Search by image available");
         CustomPrint.println("6. Show search stats");
-        CustomPrint.println("7. Delete Cache and Refresh Data");
-        CustomPrint.println("8. Exit from program\n");
+//        CustomPrint.println("7. Delete Cache and Refresh Data");
+        CustomPrint.println("7. Exit from program\n");
 
         Scanner scanner = new Scanner(System.in);
         int choice = -1;
@@ -523,7 +553,7 @@ public class Driver {
             case 4 -> Utils.SearchType.Fuel;
             case 5 -> Utils.SearchType.ImageAvailable;
             case 6 -> Utils.SearchType.Stats;
-            case 7 -> Utils.SearchType.DeleteCacheAndRefreshData;
+//            case 7 -> Utils.SearchType.DeleteCacheAndRefreshData;
             default -> Utils.SearchType.Exit;
         };
     }

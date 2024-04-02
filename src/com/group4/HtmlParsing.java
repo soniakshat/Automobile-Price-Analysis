@@ -36,8 +36,6 @@ public class HtmlParsing {
             return;
         }
 
-        CustomPrint.println("Parsing", url);
-
         // If json exist then read from that else create json
         if (Utils.isJsonFileExists(jsonCacheFileName)) {
             CustomPrint.println("JsonCache", STR."Found Json Cache \{jsonCacheFileName}");
@@ -82,6 +80,7 @@ public class HtmlParsing {
 
                     Car car = new Car(name, Integer.parseInt(price), fType, tType, -1, imageUrl);
                     dashMotorsCars.add(car);
+                    listCars.addAll(dashMotorsCars);
                 }
 
                 JSONArray jsonArray = new JSONArray();
@@ -114,8 +113,6 @@ public class HtmlParsing {
             return;
         }
 
-        CustomPrint.println("Parsing", url);
-
         // If json exist then read from that else create json
         if (Utils.isJsonFileExists(jsonCacheFileName)) {
             CustomPrint.println("JsonCache", STR."Found Json Cache \{jsonCacheFileName}");
@@ -146,7 +143,7 @@ public class HtmlParsing {
 
                     String kilometers = details.size() > 0 ? details.get(0).text().replaceAll("\\D", "") : "-1";
                     kilometers = kilometers.isEmpty() || kilometers == null ? "-1" : kilometers;
-CustomPrint.print("Kms: "+kilometers);
+//CustomPrint.print("Kms: "+kilometers);
 //                    String location = details.size() > 1 ? details.get(1).text() : "N/A";
 
                     String transmissionType = details.size() > 2 ? details.get(2).text() : "N/A";
@@ -155,19 +152,20 @@ CustomPrint.print("Kms: "+kilometers);
                     FuelType fType = getFuel(fuelType);
                     TransmissionType tType = getTransmission(transmissionType);
 
-                    CustomPrint.println(STR."""
-
-                            Name: \{name}
-                            Price: \{price}
-                            Transmission: \{transmissionType}
-                            Fuel: \{fuelType}
-                            Image: \{imageUrl}
-                            Kilometer: \{kilometers}
-
-                            """);
+//                    CustomPrint.println(STR."""
+//
+//                            Name: \{name}
+//                            Price: \{price}
+//                            Transmission: \{transmissionType}
+//                            Fuel: \{fuelType}
+//                            Image: \{imageUrl}
+//                            Kilometer: \{kilometers}
+//
+//                            """);
 
                     Car car = new Car(name, Integer.parseInt(price), fType, tType, Integer.parseInt(kilometers), imageUrl);
                     cars.add(car);
+                    listCars.addAll(cars);
                 }
 
                 JSONArray jsonArray = new JSONArray();
@@ -198,8 +196,6 @@ CustomPrint.print("Kms: "+kilometers);
             CustomPrint.printError("Jsoup Parser", STR."Invalid Url to parse: \{url}");
             return;
         }
-
-        CustomPrint.println("Parsing", url);
 
         // If json exist then read from that else create json
         if (Utils.isJsonFileExists(jsonCacheFileName)) {
@@ -254,6 +250,7 @@ CustomPrint.print("Kms: "+kilometers);
 
                     Car car = new Car(name, Integer.parseInt(price), fType, tType, Integer.parseInt(kmsDriven), imageUrl);
                     cars.add(car);
+                    listCars.addAll(cars);
                 }
 
                 JSONArray jsonArray = new JSONArray();

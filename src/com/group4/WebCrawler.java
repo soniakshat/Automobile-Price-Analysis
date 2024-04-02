@@ -44,6 +44,7 @@ public class WebCrawler {
             return htmlCacheFolderPath + htmlFileName;
         } else {
             try {
+                CustomPrint.println("Crawling", url);
                 Document document = Jsoup.connect(url).get();
                 String htmlCode = document.html();
 
