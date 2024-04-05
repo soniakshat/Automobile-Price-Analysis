@@ -13,6 +13,7 @@ import java.util.*;
  * @author Akshat Soni
  */
 public class Driver {
+
     public static Set<String> bagOfWords = new HashSet<>();
     private static final List<Car> listCars = new ArrayList<>();
     private static final SearchFrequency trackNameSearch = new SearchFrequency();
@@ -31,7 +32,7 @@ public class Driver {
     private static void advanceIntegration() {
 
         String instruction = "This program will give you information about a car by crawling below mentioned websites.";
-        CustomPrint.println("=".repeat(instruction.length()+18));
+        CustomPrint.println("=".repeat(instruction.length() + 18));
         CustomPrint.println("Instructions", STR."""
                 \{instruction}
                                                         _______
@@ -42,7 +43,7 @@ public class Driver {
                                                 ___\\_/________\\_/______
                 """);
 
-        CustomPrint.println("=".repeat(instruction.length()+18));
+        CustomPrint.println("=".repeat(instruction.length() + 18));
 
         listCars.addAll(HtmlParsing.crawlListCars());
 
@@ -63,7 +64,7 @@ public class Driver {
                         CustomPrint.print("Enter a car name to search: ");
                         carName = carScanner.next();
                     } catch (InputMismatchException e) {
-                        CustomPrint.printError("Invalid input. Please enter a correct choice:");
+                        CustomPrint.printError("Invalid input. Please enter a correct choice: ");
                         carScanner.next();
                         carName = carScanner.next(); // Discard the invalid input and wait for a new input
                     }
@@ -73,10 +74,10 @@ public class Driver {
                         Scanner scanner = new Scanner(System.in);
                         String selection = "";
                         try {
-                            CustomPrint.print("Do you want to search for suggested name? [y/n]:  ");
+                            CustomPrint.print("Do you want to search for suggested name? [y/n]: ");
                             selection = scanner.next();
                         } catch (InputMismatchException e) {
-                            CustomPrint.printError("Invalid input. Please enter a correct choice:");
+                            CustomPrint.printError("Invalid input. Please enter a correct choice: ");
                             scanner.next();
                             selection = scanner.next(); // Discard the invalid input and wait for a new input
                         }
@@ -109,7 +110,7 @@ public class Driver {
                         CustomPrint.print("Please enter your choice: ");
                         selectionFuelType = scanner.nextInt();
                     } catch (InputMismatchException e) {
-                        CustomPrint.printError("Invalid input. Please enter a correct choice:");
+                        CustomPrint.printError("Invalid input. Please enter a correct choice: ");
                         scanner.next();
                         selectionFuelType = scanner.nextInt(); // Discard the invalid input and wait for a new input
                     }
@@ -117,7 +118,7 @@ public class Driver {
                     FuelType fuel;
                     if (selectionFuelType < 1 || selectionFuelType > FuelType.values().length) {
                         CustomPrint.printError("Invalid Fuel Data");
-                      break;
+                        break;
                     } else {
                         fuel = FuelType.values()[selectionFuelType - 1];
                     }
@@ -137,7 +138,7 @@ public class Driver {
                         CustomPrint.print("Please enter your choice: ");
                         selectionTransmissionType = scanner.nextInt();
                     } catch (InputMismatchException e) {
-                        CustomPrint.printError("Invalid input. Please enter a correct choice:");
+                        CustomPrint.printError("Invalid input. Please enter a correct choice: ");
                         scanner.next();
                         selectionTransmissionType = scanner.nextInt(); // Discard the invalid input and wait for a new input
                     }
@@ -147,7 +148,7 @@ public class Driver {
                         CustomPrint.printError("Invalid Transmission Data");
                         break;
                     } else {
-                     transmission=   TransmissionType.values()[selectionTransmissionType - 1];
+                        transmission = TransmissionType.values()[selectionTransmissionType - 1];
                     }
                     getCarByTransmission(selectionTransmissionType);
                     trackTransmissionSearch.trackSearch(transmission.name());
@@ -161,7 +162,7 @@ public class Driver {
                         CustomPrint.print("Minimum Price: ");
                         minPrice = scanner.nextInt();
                     } catch (InputMismatchException e) {
-                        CustomPrint.printError("Invalid input. Please enter a correct choice:");
+                        CustomPrint.printError("Invalid input. Please enter a correct choice: ");
                         scanner.next();
                         minPrice = scanner.nextInt(); // Discard the invalid input and wait for a new input
                     }
@@ -173,7 +174,7 @@ public class Driver {
                         CustomPrint.print("Maximum Price: ");
                         maxPrice = scanner1.nextInt();
                     } catch (InputMismatchException e) {
-                        CustomPrint.printError("Invalid input. Please enter a correct choice:");
+                        CustomPrint.printError("Invalid input. Please enter a correct choice: ");
                         scanner1.next();
                         maxPrice = scanner1.nextInt(); // Discard the invalid input and wait for a new input
                     }
@@ -193,7 +194,7 @@ public class Driver {
                         CustomPrint.print("Minimum Kms: ");
                         minKms = scanner.nextInt();
                     } catch (InputMismatchException e) {
-                        CustomPrint.printError("Invalid input. Please enter a correct choice:");
+                        CustomPrint.printError("Invalid input. Please enter a correct choice: ");
                         scanner.next();
                         minKms = scanner.nextInt(); // Discard the invalid input and wait for a new input
                     }
@@ -205,7 +206,7 @@ public class Driver {
                         CustomPrint.print("Maximum Kms: ");
                         maxKms = scanner1.nextInt();
                     } catch (InputMismatchException e) {
-                        CustomPrint.printError("Invalid input. Please enter a correct choice:");
+                        CustomPrint.printError("Invalid input. Please enter a correct choice: ");
                         scanner1.next();
                         maxKms = scanner1.nextInt(); // Discard the invalid input and wait for a new input
                     }
@@ -224,20 +225,26 @@ public class Driver {
                     CustomPrint.println("Exiting program...");
                 }
                 case Stats -> {
+
+                    String nameStats = trackNameSearch.displaySearchFrequency();
+                    String fuelStats = trackFuelSearch.displaySearchFrequency();
+                    String transmissionStats = trackTransmissionSearch.displaySearchFrequency();
+
+                    if(nameStats.isEmpty() && fuelStats.isEmpty() && transmissionStats.isEmpty()){
+                        CustomPrint.println("No search stats found.");
+                        break;
+                    }
+
                     CustomPrint.println("Search Stats are as follows:\n");
-                    CustomPrint.println("\nSearch By Name");
-                    trackNameSearch.displaySearchFrequency();
-
-                    Utils.delay(1500);
-
-                    CustomPrint.println("\nSearch By Fuel");
-                    trackFuelSearch.displaySearchFrequency();
-
-                    Utils.delay(1500);
-
-                    CustomPrint.println("\nSearch By Transmission");
-                    trackTransmissionSearch.displaySearchFrequency();
-//
+                    if (!nameStats.isEmpty()) {
+                        CustomPrint.println(STR."\nSearch By Name:\n\{nameStats}");
+                    }
+                    if (fuelStats == null || !fuelStats.isEmpty()) {
+                        CustomPrint.println(STR."\nSearch By Fuel Type:\n\{fuelStats}");
+                    }
+                    if (transmissionStats == null || !transmissionStats.isEmpty()) {
+                        CustomPrint.println(STR."\nSearch By Transmission Type:\n\{transmissionStats}");
+                    }
                 }
 //                case DeleteCacheAndRefreshData -> {
 //                    CustomPrint.println("Deleting Cache...");
@@ -275,11 +282,14 @@ public class Driver {
 
         // Sort the cars by their kms driven in ascending order
         listRequiredCars.sort(Comparator.comparingInt(Car::getKmsDriven));
-
-        for (Car car : listRequiredCars) {
-            CustomPrint.println(car);
+        if (listRequiredCars.isEmpty()) {
+            CustomPrint.printError("Search Car By Kms Range", "No car found...");
+        } else {
+            for (Car car : listRequiredCars) {
+                CustomPrint.println(car);
+            }
+            jsonProcessing_pageRanking_and_invertedIndexing("kms", minKms, String.valueOf(maxKms));
         }
-        jsonProcessing_pageRanking_and_invertedIndexing("kms", minKms, String.valueOf(maxKms));
     }
 
     /**
@@ -300,11 +310,14 @@ public class Driver {
 
         // Sort the cars by their price in ascending order
         listRequiredCars.sort(Comparator.comparingInt(Car::getPrice));
-
-        for (Car car : listRequiredCars) {
-            CustomPrint.println(car);
+        if (listRequiredCars.isEmpty()) {
+            CustomPrint.printError("Search Car By Price Range", "No car found...");
+        } else {
+            for (Car car : listRequiredCars) {
+                CustomPrint.println(car);
+            }
+            jsonProcessing_pageRanking_and_invertedIndexing("price", minPrice, String.valueOf(maxPrice));
         }
-        jsonProcessing_pageRanking_and_invertedIndexing("price", minPrice, String.valueOf(maxPrice));
     }
 
     /**
@@ -328,10 +341,14 @@ public class Driver {
             }
 
         }
-        for (Car car : listRequiredCars) {
-            CustomPrint.println(car);
+        if (listRequiredCars.isEmpty()) {
+            CustomPrint.printError("Search Car By Transmission Type", "No car found...");
+        } else {
+            for (Car car : listRequiredCars) {
+                CustomPrint.println(car);
+            }
+            jsonProcessing_pageRanking_and_invertedIndexing("transmission", selectionTransmissionType, null);
         }
-        jsonProcessing_pageRanking_and_invertedIndexing("transmission", selectionTransmissionType, null);
     }
 
     /**
@@ -357,10 +374,14 @@ public class Driver {
                 listRequiredCars.add(car);
             }
         }
-        for (Car car : listRequiredCars) {
-            CustomPrint.println(car);
+        if (listRequiredCars.isEmpty()) {
+            CustomPrint.printError("Search Car By Fuel Type", "No car found...");
+        } else {
+            for (Car car : listRequiredCars) {
+                CustomPrint.println(car);
+            }
+            jsonProcessing_pageRanking_and_invertedIndexing("fuelType", selectionFuelType, null);
         }
-        jsonProcessing_pageRanking_and_invertedIndexing("fuelType", selectionFuelType, null);
     }
 
     /**
@@ -436,10 +457,14 @@ public class Driver {
                 listRequiredCars.add(car);
             }
         }
-        for (Car car : listRequiredCars) {
-            CustomPrint.println(car);
+        if (listRequiredCars.isEmpty()) {
+            CustomPrint.printError("Search Car By Image", "No car found...");
+        } else {
+            for (Car car : listRequiredCars) {
+                CustomPrint.println(car);
+            }
+            jsonProcessing_pageRanking_and_invertedIndexing("image", 0, null);
         }
-        jsonProcessing_pageRanking_and_invertedIndexing("image", 0, null);
     }
 
     /**
@@ -546,16 +571,24 @@ public class Driver {
             choice = scanner.nextInt(); // Discard the invalid input and wait for a new input
         }
 
-        return switch (choice) {
-            case 1 -> Utils.SearchType.Name;
-            case 2 -> Utils.SearchType.Price;
-            case 3 -> Utils.SearchType.Transmission;
-            case 4 -> Utils.SearchType.Fuel;
-            case 5 -> Utils.SearchType.ImageAvailable;
-            case 6 -> Utils.SearchType.Stats;
+        Utils.SearchType selectedSearchType =
+                switch (choice) {
+                    case 1 -> Utils.SearchType.Name;
+                    case 2 -> Utils.SearchType.Price;
+                    case 3 -> Utils.SearchType.Transmission;
+                    case 4 -> Utils.SearchType.Fuel;
+                    case 5 -> Utils.SearchType.ImageAvailable;
+                    case 6 -> Utils.SearchType.Stats;
 //            case 7 -> Utils.SearchType.DeleteCacheAndRefreshData;
-            default -> Utils.SearchType.Exit;
-        };
+                    case 7 -> Utils.SearchType.Exit;
+                    default -> null;
+                };
+
+        if (selectedSearchType == null) {
+            CustomPrint.printError("Invalid Input", "Please select a proper input.");
+            askForChoiceAdvance();
+        }
+        return selectedSearchType;
     }
 
     public static void deleteAllFilesInFolder(String folderPath) {

@@ -24,12 +24,15 @@ public class SearchFrequency {
     }
 
     // Method to display search frequency for all words
-    public void displaySearchFrequency() {
+    public String displaySearchFrequency() {
 //        System.out.println("Search Frequency:");
 //        frequencyCount.topKWords(3);
+        StringBuilder data = new StringBuilder();
         for (Map.Entry<String, Integer> entry : searchFrequency.entrySet()) {
-            System.out.println(STR."\{entry.getKey()}: \{entry.getValue()}");
+            data.append(STR."\n\{entry.getKey()}: \{entry.getValue()}");
+            CustomPrint.println(STR."\{entry.getKey()}: \{entry.getValue()}");
         }
+        return data.toString();
     }
 
     /**
